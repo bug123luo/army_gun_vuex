@@ -1,0 +1,47 @@
+.tag:before, .tag:after {
+    content: "";
+    display: block;
+    border-width: 10px;
+    position: absolute;
+    bottom: -20px;
+    left: 60px;
+    border-style: solid dashed dashed;
+    border-color: #ccc transparent transparent;
+}
+
+.tag:after {
+    bottom: -19px;
+    border-color: #FFF transparent transparent;
+}
+
+.tag2:before, .tag2:after {
+    content: "";
+    display: block;
+    border-width: 10px;
+    position: absolute;
+    bottom: -20px;
+    left: 60px;
+    border-style: solid dashed dashed;
+    border-color: #f8b400 transparent transparent;
+}
+
+.tag2:after {
+    bottom: -19px;
+    border-color: #f8b400 transparent transparent;
+}
+
+.tag3:before, .tag3:after {
+    content: "";
+    display: block;
+    border-width: 10px;
+    position: absolute;
+    bottom: -20px;
+    left: 60px;
+    border-style: solid dashed dashed;
+    border-color: #a6ff79 transparent transparent;
+}
+
+.tag3:after {
+    bottom: -19px;
+    border-color: #a6ff79 transparent transparent;
+}
