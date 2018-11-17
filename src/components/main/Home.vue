@@ -9,6 +9,7 @@
 
             <!-- Start MAIN -->
             <div class="main">
+              <!-- <app-map></app-map> -->
               <router-view></router-view>
             </div>  
             <!-- END   MAIN -->

@@ -242,8 +242,6 @@
 							</div>
 						</form>	
 				<!-- Modal -->
-
-				  
   </div>
 </template>
 

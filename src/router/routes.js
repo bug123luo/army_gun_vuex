@@ -1,5 +1,4 @@
 import Login from '@/components/Login'
-import Index from '@/components/Index'
 
 import Elements from '@/components/main/other/Elements'
 import Tables from '@/components/main/other/Tables'
@@ -15,10 +14,12 @@ import Home from "@/components/main/Home"
 
 
 export const routes = [
-    { path: '/', name: 'Login', component: Login },
+  { path: '/login', name: 'Login', component: Login },
     
-  { path: '/home', name: 'Home', component: Home, children: [
-    { path: "/map", name: "Map", components: { default: Map, } },
+  { path: '/', name: 'Home', component: Home, children:
+   [
+    { path: "", name: "Map", component:Map },
+    { path: "map", name: "", component: Map },
     { path: "/elements", name: "Elements", component: Elements },
     { path: "/tables", name: "Tables", component: Tables },
     { path: "/gunList", name: "GunList", component: GunList },
@@ -28,7 +29,10 @@ export const routes = [
     { path: "/distributionStorage", name: "DistributionStorage", component: DistributionStorage },
     { path: "/predistribution", name: "Predistribution", component: Predistribution },
     { path: "/finalStorage", name: "FinalStorage", component: FinalStorage },
-  ]},
-  
-    { path: "*", redirect: '/' },//找不到页面的时候，重定向到主页
+      { path: "*", redirect: '/map' },//找不到页面的时候，重定向到主页
+      { path: "/*", redirect: '' },//找不到页面的时候，重定向到主页
+   ]
+  },
+  { path: "*", redirect: '/login' },//找不到页面的时候，重定向到主页
+   
   ]

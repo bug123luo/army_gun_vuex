@@ -9,7 +9,11 @@
 				<div class="navbar-btn">
 					<button type="button" class="btn-toggle-fullwidth"><i class="lnr lnr-arrow-left-circle"></i></button>
 				</div>
+        <div class="navbar-btn">
+					<button type="button" class="btn-toggle-fullwidth" @click="loginOut">退出</button>
+				</div>
 			</div>
+
 		</nav>
 		<!-- END NAVBAR -->
 
@@ -55,11 +59,18 @@ export default {
   data () {
     return {
     }
+  },
+  methods:{
+    loginOut(){
+       localStorage.clear();
+       this.$store.commit('SAVE_USERSTATE',false)
+       this.$router.replace('/login')
+    }
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+@import '../../../static/assets/vendor/linearicons/style.css';
 </style>

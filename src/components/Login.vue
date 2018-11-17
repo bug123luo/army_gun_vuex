@@ -48,20 +48,23 @@ export default {
       var userName = _this.$refs.userName.value;
       var passWord = _this.$refs.passWord.value;
       if(!userName || !passWord){
-        alert("用户或者密码不能为空");
+           $("#error").text("用户或者密码不能为空");
       }else{
           let params = new URLSearchParams();
           params.append("webUserName", userName),
           params.append("webUserPassword", passWord),
 
-          this.$axios.post('/webUser/loginWeb',params)
+          _this.$axios.post('/webUser/loginWeb',params)
                      .then(response =>{
                          console.log(response.data);
                          var user=response.data;
                          if(user.status=="1000"){
-                            this.$router.replace('/home')
+                             //将登录信息存放到，store中，进行管理
+                             _this.$store.commit('SAVE_USERINFO',user)
+                             _this.$store.commit('SAVE_USERSTATE',true)
+                             _this.$router.replace('/')
                          }else{
-                              $("#error").text("用户名不能为空");
+                              $("#error").text("用户或密码不正确")
                          }
                      })
       }
