@@ -10,7 +10,7 @@ import { routes } from "./router/routes"
 import axios from "axios"
 
 //引入store
-import store from "./vuex/store";
+import store from "./vuex/store"
 
 
 
@@ -59,7 +59,7 @@ const router = new VueRouter({
   if (to.path == '/login'){
     next();//会正常访问，加false就不会访问
   } else{
-    if (store.state.userState){
+    if (store.state.userState===true){
       next(true);
     }else{
       next("/login");

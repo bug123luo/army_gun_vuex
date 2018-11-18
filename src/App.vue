@@ -6,7 +6,13 @@
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  data(){
+
+  },
+  created(){
+    //this.$router.go(0);
+  }
 }
 </script>
 

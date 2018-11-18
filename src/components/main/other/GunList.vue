@@ -56,7 +56,7 @@
 														<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#exampleModal" v-on:click="updateGunS(guns.id)">
 															修改
 														</button>
-														<button type="button" class="btn btn-danger btn-sm"  v-on:click="deleteGun(guns.id)"><!-- <i class="fa fa-trash-o"></i> -->
+														<button type="button" class="btn btn-danger btn-sm"  v-on:click="deleteGun(guns.id,guns.gunId)"><!-- <i class="fa fa-trash-o"></i> -->
 															删除
 														</button>
 														<!-- Button trigger modal -->
@@ -242,6 +242,7 @@
 							</div>
 						</form>	
 				<!-- Modal -->
+        {{checkDataIds}}
   </div>
 </template>
 
@@ -271,10 +272,10 @@ export default {
     // 监视双向绑定的数据数组
     checkDataIds: {
       handler() {
-        if(this.checkDataIds.length==0){
-          $("#batchAllocation").attr('disabled', 'disabled');
-        }else{
-          $("#batchAllocation").removeAttr('disabled');
+        if (this.checkDataIds.length == 0) {
+          $("#batchAllocation").attr("disabled", "disabled");
+        } else {
+          $("#batchAllocation").removeAttr("disabled");
         }
         // 数据数组有变化将触发此函数
         /*   if (this.checkDataIds.length == 4) {
@@ -286,10 +287,12 @@ export default {
         // 数据数组有变化将触发此函数
         if ($("#cAll").checked) {
           $(".gIdcheckItem").prop("checked", $(this).prop("checked"));
+        }else if(this.checkDataIds.length <  $(".gIdcheckItem").length){
+                    $("#cAll").prop("checked", false);
         } else if (
           $(".gIdcheckItem:checked").length == $(".gIdcheckItem").length
         ) {
-          $("#cAll").prop("checked", flag);
+            $("#cAll").prop("checked", true);
         }
       },
       deep: true // 深度监视
@@ -364,12 +367,12 @@ export default {
     //修改枪支信息
     updateGun(e) {
       if (!this.gun.gunId || !this.gun.gunModel || !this.gun.gunType) {
-        alert("请添加对应的信息!");
+        layer.alert("请添加对应的信息!");
         // console.log("请添加对应的信息!");
       } else {
         var qs = require("qs");
         let params = new URLSearchParams();
-          params.append("id", this.gun.id),
+        params.append("id", this.gun.id),
           params.append("uid", this.gun.uid),
           params.append("isDel", this.gun.isDel),
           params.append("gunId", this.gun.gunId),
@@ -386,7 +389,15 @@ export default {
             if (response.data.status == "1000") {
               $("#exampleModal").modal("hide");
               this.getGunLists(this.cur);
-              alert(response.data.errorMessage);
+              Lobibox.notify("success", {
+                size: "mini",
+                msg: response.data.errorMessage
+              });
+            } else {
+              layer.alert(response.data.errorMessage, {
+                icon: 2,
+                skin: "layer-ext-moon"
+              });
             }
           })
           .catch(error => {
@@ -398,30 +409,103 @@ export default {
       e.preventDefault();
     },
     //删除枪支信息
-    deleteGun(id) {
-      this.$axios
-        .delete("/gun/deleteGun?gunId=" + id + "&type=" + 1)
-        .then(response => {
-          console.log(response.data);
-          this.getGunLists(this.cur);
-        });
-    },
+    deleteGun(id, gunId) {
+      let _this = this;
+      //询问框
+      layer.confirm(
+        "确定要[" + gunId + "]删除？",
+        {
+          btn: ["确定", "取消"] //按钮
+        },
+        function() {
+          _this.$axios
+            .delete("/gun/deleteGun?gunId=" + id + "&type=" + 1)
+            .then(response => {
+              var data = response.data;
+              if (response.data.status == "1000") {
+                _this.getGunLists(_this.cur);
+                Lobibox.notify("success", {
+                  size: "mini",
+                  msg: response.data.errorMessage
+                });
+              } else {
+                Lobibox.notify("error", {
+                  size: "mini",
+                  msg: response.data.errorMessage
+                });
+              }
+              // console.log(response.data);
+              layer.msg("删除成功", {
+                time: 500 //0.5s后自动关闭
+              });
+            });
+        },
+        function() {
+          layer.msg("取消成功", {
+            time: 500 //0.5s后自动关闭
+          });
+        }
+      );
+    }, //批量删除
     deleteGunAll() {
-      if (this.checkDataIds < 1) {
-        alert("请勾选您要删除的信息");
+      let _this = this;
+      if (_this.checkDataIds < 1) {
+        layer.alert("请勾选您要删除的信息", {
+          icon: 3,
+          skin: "layer-ext-moon"
+        });
       } else {
-        this.$axios
+        layer.confirm(
+          "确定要[" + _this.checkDataIds + "]删除？",
+          {
+            btn: ["确定", "取消"] //按钮
+          },
+          function() {
+            _this.$axios
+              .delete(
+                "/gun/deleteGun?gunId=" + _this.checkDataIds + "&type=" + 1
+              )
+              .then(response => {
+                var data = response.data;
+                if (response.data.status == "1000") {
+                  _this.getGunLists(_this.cur);
+                  $("#batchAllocation").attr("disabled", "disabled");
+                  _this.checkDataIds = [];
+                  Lobibox.notify("success", {
+                    size: "mini",
+                    msg: response.data.errorMessage
+                  });
+                } else {
+                  Lobibox.notify("error", {
+                    size: "mini",
+                    msg: response.data.errorMessage
+                  });
+                }
+                // console.log(response.data);
+                layer.msg("删除成功", {
+                  time: 500 //0.5s后自动关闭
+                });
+              });
+          },
+          function() {
+            layer.msg("取消成功", {
+              time: 500 //0.5s后自动关闭
+            });
+          }
+        );
+
+        /*   this.$axios
           .delete("/gun/deleteGun?gunId=" + this.checkDataIds + "&type=" + 1)
           .then(response => {
             console.log(response.data);
             this.getGunLists(this.cur);
-          });
+          }); */
       }
     },
     //重置表单数据
-    reset_from(ele){
-         //重置表单内容
-        $(ele)[0].reset();
+    reset_from(ele) {
+      //重置表单内容
+      $(ele)[0].reset();
     },
     //新增过度开启
     createGunS() {
@@ -437,11 +521,11 @@ export default {
         !this.$refs.gunModel.value ||
         !this.$refs.gunType.value
       ) {
-        alert("请添加对应的信息!");
+        layer.alert("请添加对应的信息!");
       } else {
         var qs = require("qs");
         let params = new URLSearchParams();
-          params.append("gunId", this.$refs.gunId.value),
+        params.append("gunId", this.$refs.gunId.value),
           params.append("gunModel", this.$refs.gunModel.value),
           params.append("gunType", this.$refs.gunType.value),
           params.append("gunMac", this.$refs.gunMac.value),
@@ -455,11 +539,22 @@ export default {
             if (response.data.status == "1000") {
               $("#exampleModalAdd").modal("hide");
               this.getGunLists(this.cur);
-              alert(response.data.errorMessage);
+              Lobibox.notify("success", {
+                size: "mini",
+                msg: response.data.errorMessage
+              });
             } else if (response.data.status == "1001") {
-              alert(response.data.errorMessage);
+              layer.msg(response.data.errorMessage,{icon:3})
+              /* Lobibox.notify("error", {
+                size: "mini",
+                msg: response.data.errorMessage
+              }); */
             } else {
-              alert(response.data.errorMessage);
+              layer.msg(response.data.errorMessage,{icon:3})
+             /*  Lobibox.notify("warning", {
+                size: "mini",
+                msg: response.data.errorMessage
+              }); */
             }
           })
           .catch(error => {
