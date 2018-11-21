@@ -128,7 +128,7 @@ export default {
           //1、鼠标左键单击事件
           function AddClickHandler(marker) {
             marker.addEventListener("click", function(e) {
-              getGunLocationClick(p.gunId);
+              getGunLocationClick(p.gunMac);
             });
           }
           //右键单击marker出现右键菜单事件
@@ -160,7 +160,7 @@ export default {
          tag = "<div class='tag2' style='padding-left:10px;padding-top:6px;line-height:20px;width:150px; height:133px; border:1px solid #f8b400; position:relative; border-radius:8px; background-color:#f8b400;'>"
                 + "IMIE：" + p.appIMEI + lineoff + "</br>"
                 + "电话：" + p.appPhone + lineoff + "</br>"
-                + "枪支：" + (p.gunModel).slice(0, 8) + lineoff + "</br>"
+               // + "枪支：" + (p.gunModel).slice(0, 8) + lineoff + "</br>"
                 + "枪号：" + p.gunId + lineoff + "</br>"
                /*  + ((p.gunState) == 0 ? accompany : (p.gunState) == 1 ? gunOffNormal : gunOffNormal)
                 + ((p.deviceState) == 0 ? onLine : (p.deviceState) == 1 ? gunOffNormal : (p.deviceState) == 2 ? offLine : assist) + "</br>"  */+ "</div>";
@@ -203,6 +203,7 @@ export default {
 
       //为鼠标左键事件而创建
       function getGunLocationClick(gunId){
+        alert(gunId);
        $.ajax({
             url: "http://127.0.0.1:8888/gunLocation/readGunDynamic",
             type: "GET",
@@ -266,7 +267,7 @@ export default {
               tag = "<div class='tag2' style='padding-left:10px;padding-top:6px;line-height:20px;width:150px; height:133px; border:1px solid #f8b400; position:relative; border-radius:8px; background-color:#f8b400;'>"
                       + "IMIE：" + p.appIMEI + lineoff + "</br>"
                       + "电话：" + p.appPhone + lineoff + "</br>"
-                      + "枪支：" + (p.gunModel).slice(0, 8) + lineoff + "</br>"
+                      //+ "枪支：" + (p.gunModel).slice(0, 8) + lineoff + "</br>"
                       + "枪号：" + p.gunId + lineoff + "</br>"
                     /*  + ((p.gunState) == 0 ? accompany : (p.gunState) == 1 ? gunOffNormal : gunOffNormal)
                       + ((p.deviceState) == 0 ? onLine : (p.deviceState) == 1 ? gunOffNormal : (p.deviceState) == 2 ? offLine : assist) + "</br>"  */+ "</div>";

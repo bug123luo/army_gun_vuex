@@ -121,14 +121,26 @@ export default {
     },
     //枪支预出库
     distributionStorage(appId) {
-        this.$axios
+      let _this=this;
+        _this.$axios
           .post(
             "/wareHouseRecords/createDeviceBindingGunsBeforehandDelivery?appId=" +
               appId +
               "&type=5"
           )
           .then(response => {
-            console.log(response.data);
+            var result=response.data;
+            if(result.status=="1000"){
+              Lobibox.notify("success",{
+                size:"mini",
+                msg: response.data.errorMessage
+              })
+            }else{
+              Lobobix.notify("error",{
+                size:"mini",
+                msg: response.data.errorMessage
+              })
+            }
           });
       },
        //分页

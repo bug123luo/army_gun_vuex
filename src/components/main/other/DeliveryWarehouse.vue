@@ -171,8 +171,7 @@ export default {
 	beforehandDelivery(guncode){
 		if(!this.selectedUser){
 			alert("请选择绑定用户");
-		}else{
-
+	   }else{
 		this.$axios.post("/wareHouseRecords/createWareHouseRecordsBeforehandDelivery?gunIds="+guncode+ "&gunUserId=" + this.selectedUser)
 		        .then(response => {
                 console.log(response.data);

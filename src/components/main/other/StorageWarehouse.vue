@@ -316,7 +316,19 @@ export default {
             appImei
         )
         .then(response => {
-          console.log(response.data);
+          var result=response.data;
+          if(result.status=="1000"){
+              Lobibox.notify("success", {
+                size: "mini",
+                msg: response.data.errorMessage
+              });
+            }else{
+              Lobibox.notify("error", {
+                size: "mini",
+                msg: response.data.errorMessage
+              });
+            }
+          //console.log(response.data);
         });
     },
     //预入库:多个
@@ -339,7 +351,7 @@ export default {
 
     //确认入库
     affirmStorage(gunId, gunMac, appImei) {
-      alert(gunId+"---"+gunMac+"----"+appImei)
+     // alert(gunId+"---"+gunMac+"----"+appImei)
       this.$axios
         .delete(
           "/wareHouseRecords/revocationWareHouseRecordsStorage?gunId=" +
@@ -351,12 +363,32 @@ export default {
             "&state=1"
         )
         .then(response => {
-          console.log(response.data);
+          var result=response.data;
+          if(result.status=="1000"){
+              Lobibox.notify("success", {
+                size: "mini",
+                msg: response.data.errorMessage
+              });
+            }else{
+              Lobibox.notify("error", {
+                size: "mini",
+                msg: response.data.errorMessage
+              });
+            }
+         // console.log(response.data);
         });
     },
     //撤销入库
     revocationStorage(gunId, gunMac, appImei) {
-      this.$axios
+       let _this=this;
+         //询问框
+      layer.confirm(
+        "确定要撤销入库？",
+        {
+          btn: ["确定", "取消"] //按钮
+        },
+        function() {
+            _this.$axios
         .delete(
           "/wareHouseRecords/revocationWareHouseRecordsStorage?gunId=" +
             gunId +
@@ -367,8 +399,30 @@ export default {
             "&state=0"
         )
         .then(response => {
-          console.log(response.data);
-        });
+          var result=response.data;
+          if(result.status=="1000"){
+              Lobibox.notify("success", {
+                size: "mini",
+                msg: response.data.errorMessage
+              });
+            }else{
+              Lobibox.notify("error", {
+                size: "mini",
+                msg: response.data.errorMessage
+              });
+            }
+             // console.log(response.data);
+              layer.msg("撤销成功", {
+                time: 500 //0.5s后自动关闭
+              });
+            });
+        },
+        function() {
+          layer.msg("取消成功", {
+            time: 500 //0.5s后自动关闭
+          });
+        }
+      );
     },
     //分页
     btnClick: function(data) {

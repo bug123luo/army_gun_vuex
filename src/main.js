@@ -21,7 +21,9 @@ Vue.use(VueRouter)
 Vue.prototype.$axios = axios
 
 axios.defaults.baseURL = 'http://127.0.0.1:8888';
-axios.defaults.timeout = 10000;
+axios.defaults.timeout = 50000;
+axios.defaults.withCredentials = true; // 让ajax携带cookie
+
 
 
 
@@ -54,18 +56,17 @@ const router = new VueRouter({
  */
   router.beforeEach((to, from, next) => {
   //next("/login");
-    //console.log(to);
+    //console.log(to)
+    //alert(store.state.userState)
   //判断store.gettes.isLogin===fasle
   if (to.path == '/login'){
     next();//会正常访问，加false就不会访问
-  } else{
-    if (store.state.userState===true){
-      next(true);
-    }else{
-      next("/login");
-      alert("请先登录！");
-    }
-  } 
+  } else if (store.state.userState=="true"){
+    next(true);
+  }else{
+    next("/login");
+    alert("请先登录！");
+  }
 })  
 
 /* eslint-disable no-new */

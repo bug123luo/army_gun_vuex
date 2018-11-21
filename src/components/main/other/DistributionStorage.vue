@@ -120,7 +120,7 @@
 				</div>
 			</div>
 			<!-- END MAIN CONTENT -->
-
+{{checkDataIdsNP}}
   </div>
 </template>
 <script>
@@ -164,10 +164,12 @@ export default {
         // 数据数组有变化将触发此函数
         if ($("#cAllNP").checked) {
           $(".gIdcheckItemNP").prop("checked", $(this).prop("checked"));
-        } else if (
+        }else if(this.checkDataIdsNP.length <  $(".gIdcheckItemNP").length){
+                    $("#cAllNP").prop("checked", false);
+        }  else if (
           $(".gIdcheckItemNP:checked").length == $(".gIdcheckItemNP").length
         ) {
-          $("#cAllNP").prop("checked", flag);
+          $("#cAllNP").prop("checked", true);
         }
       },
       deep: true // 深度监视
@@ -216,46 +218,75 @@ export default {
 
     //出库分配操作：单个
     distributionStorage(guncode) {
-      if (!this.selectedApp) {
-        alert("请选择绑定设备");
-      } else if (!this.selectedUser) {
-        alert("请选择绑定设备");
-      } else {
-        this.$axios
+      let _this=this;
+      if (!_this.selectedApp) {
+          layer.msg("请选择绑定设备",{time:1000}); 
+      }/*  else if (!_this.selectedUser) {
+         layer.msg("请选择绑定用户",{time:1000}); 
+      } */ else {
+        _this.$axios
           .post(
             "/appGun/createAppGun?gunIds=" +
               guncode +
               "&appId=" +
-              this.selectedApp +
+              _this.selectedApp +
               "&gunUserId=" +
-              this.selectedUser
+              _this.selectedUser
           )
           .then(response => {
-            this.getGunListNotPreselected();
-            console.log(response.data);
+            var result=response.data;
+            if(result.status=="1000"){
+               $("#batchAllocation").attr('disabled', 'disabled');
+                _this.getGunListNotPreselected(_this.pn);
+                _this.checkDataIdsNP = [];
+                  Lobibox.notify("success", {
+                    size: "mini",
+                    msg: response.data.errorMessage
+                  });
+            }else{
+                Lobibox.notify("error", {
+                    size: "mini",
+                    msg: response.data.errorMessage
+                  });
+            }
           });
       }
     },
     //出库分配操作：多个
     distributionStorageAll() {
-      if (!this.selectedApp) {
-        alert("请选择绑定用户");
-      } else if (this.checkDataIdsNP.length < 1) {
-        alert("请选择出库的枪支");
+      let _this=this;
+      if (!_this.selectedApp) {
+         layer.msg("请选择绑定设备",{time:1000}); 
+      } else if (_this.checkDataIdsNP.length < 1) {
+        layer.msg("请选择出库的枪支",{time:1000}); 
       } else {
-        this.$axios
+        _this.$axios
           .post(
             "/appGun/createAppGun?gunIds=" +
-              this.checkDataIdsNP +
+              _this.checkDataIdsNP +
               "&appId=" +
-              this.selectedApp +
+              _this.selectedApp +
               "&gunUserId=" +
-              this.selectedUser
+              _this.selectedUser
           )
           .then(response => {
-            document.querySelector("#cAllNP").checked = false;
-            console.log(response.data);
-            this.getGunListNotPreselected(this.pn);
+            var result=response.data;
+            if(result.status=="1000"){
+              _this.checkDataIdsNP = [];
+               $("#batchAllocation").attr('disabled', 'disabled');
+              _this.getGunListNotPreselected(_this.pn);
+               document.querySelector("#cAllNP").checked = false;
+                _this.getGunListNotPreselected(_this.pn);
+                  Lobibox.notify("success", {
+                    size: "mini",
+                    msg: response.data.errorMessage
+                  });
+            }else{
+                Lobibox.notify("error", {
+                    size: "mini",
+                    msg: response.data.errorMessage
+                  });
+            }
           });
       }
     },

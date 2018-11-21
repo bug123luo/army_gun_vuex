@@ -75,12 +75,45 @@ export default {
   },
   methods:{
     loginOut(){
-       localStorage.clear();
-       this.$store.commit('SAVE_USERSTATE',false)
-       this.$router.replace('/login')
+      let _this=this;
+         //询问框
+      layer.confirm(
+        "确定要退出登录？",
+        {
+          btn: ["确定", "取消"] //按钮
+        },
+        function() {
+            _this.$axios.post("/webUser/loginOut").then(response => {
+          var result=response.data;
+          if(result.status=="1000"){
+             //layer.msg(response.data.errorMessage)
+            localStorage.clear();
+            _this.$store.commit('SAVE_USERSTATE',false)
+            _this.$router.replace('/login')
+            }else{
+              Lobibox.notify("error", {
+                size: "mini",
+                msg: result.errorMessage
+              });
+            }
+             // console.log(response.data);
+              layer.msg(result.errorMessage, {
+                time: 500 //0.5s后自动关闭
+              });
+            });
+        },
+        function() {
+          layer.msg("取消成功", {
+            time: 500 //0.5s后自动关闭
+          });
+        }
+      );
     }
   },created(){
-    
+    if(this.$store.state.userRefrsh){
+      history.go(0);
+       _this.$store.commit('SAVE_REFRESH',false)
+    }
   }
 }
 </script>

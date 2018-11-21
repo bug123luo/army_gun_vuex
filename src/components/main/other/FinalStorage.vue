@@ -10,9 +10,15 @@
 
 	                            <!-- INPUT SIZING -->
 							<div class="panel">
-								<div class="panel-body">
+                <div class="panel-body">
+                  <div class="layui-inline">
+                    截止时间：<input type="text" class="layui-input" id="returnTime"  v-model="returnTime">
+                  </div>
+                  <span class="layui-word-aux" id="test4"></span>
+                </div>  
+							<!-- 	<div class="panel-body">
 									截止时间：<input type="date" name="returnTime" id="returnTime" v-model="returnTime">
-								</div>
+								</div> -->
 							</div>
 								
 
@@ -92,7 +98,11 @@
   </div>
 </template>
 
+
+
+
 <script>
+import "../../common/js/layuiTime.js";
 export default {
   name: "FinalStorage",
   data() {
@@ -134,34 +144,89 @@ export default {
     },
     //枪支预出库
     distributionStorage(appId) {
-      if (!this.returnTime) {
-        alert("请选择截止时间");
+      let _this=this;
+      if (!_this.returnTime) {
+        layer.msg("请选择截止时间",{time:1000});
       } else {
-        this.$axios
+        _this.$axios
           .post(
             "/wareHouseRecords/createDeviceBindingGunsBeforehandDelivery?appId=" +
               appId +
               "&type=7" +
               "&endTime=" +
-              this.returnTime
+              _this.returnTime
           )
           .then(response => {
-            
-            console.log(response.data);
+            var result=response.data;
+            if(result.status=="1000"){
+              Lobibox.notify("success", {
+                size: "mini",
+                msg: response.data.errorMessage
+              });
+            }else{
+              Lobibox.notify("error", {
+                size: "mini",
+                msg: response.data.errorMessage
+              });
+            }
           });
       }
     },
     //军械员：撤销出库
     revocationDelivery(appId) {
-      this.$axios
+      let _this=this;
+       //询问框
+      layer.confirm(
+        "确定要撤销出库？",
+        {
+          btn: ["确定", "取消"] //按钮
+        },
+        function() {
+            _this.$axios
         .delete(
           "/wareHouseRecords/revocationWareHouseRecordsDelivery_2?appId=" +
             appId
         )
         .then(response => {
-          console.log(response.data);
-        });
+          var result=response.data;
+          if(result.status=="1000"){
+              Lobibox.notify("success", {
+                size: "mini",
+                msg: response.data.errorMessage
+              });
+            }else{
+              Lobibox.notify("error", {
+                size: "mini",
+                msg: response.data.errorMessage
+              });
+            }
+             // console.log(response.data);
+              layer.msg("撤销成功", {
+                time: 500 //0.5s后自动关闭
+              });
+            });
+        },
+        function() {
+          layer.msg("取消成功", {
+            time: 500 //0.5s后自动关闭
+          });
+        }
+      );
     },
+   /*  getTimeLayer:function(){
+        //某个时间在当前时间的多久前
+      var setTimeAgo = function(y, M, d, H, m, s){
+        var str = util.timeAgo(new Date(y, M||0, d||1, H||0, m||0, s||0));
+        lay('#test4').html(str);
+      };
+      laydate.render({
+        elem: '#returnTime', //指定元素
+        type: 'datetime',
+        done: function(value, date){
+        setTimeAgo(date.year, date.month - 1, date.date, date.hours, date.minutes, date.seconds);
+       }
+      });
+    }, */
     //分页
     btnClick: function(data) {
       //页码点击事件

@@ -242,7 +242,7 @@
 							</div>
 						</form>	
 				<!-- Modal -->
-        {{checkDataIds}}
+        
   </div>
 </template>
 
@@ -423,6 +423,7 @@ export default {
             .then(response => {
               var data = response.data;
               if (response.data.status == "1000") {
+                $("#batchAllocation").attr("disabled", "disabled");
                 _this.getGunLists(_this.cur);
                 Lobibox.notify("success", {
                   size: "mini",

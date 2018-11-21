@@ -14,7 +14,8 @@
                     </div>
                     <div></div>
                     <p><input class="sure" type="button" id="login" @click="loginSubmit()" value="登录"/></p>
-
+<!-- {{this.$store.state.userState}}
+        {{this.$store.state.userInfo}} -->
                 </form>
                 <dl class="sign">
                     <dt><a href="retrievePassword.html">忘记密码？</a></dt>
@@ -30,7 +31,9 @@
             </div>
             <div class="jpg"><img src="img/beijing.png"/></div>
         </div>
+        
     </div>
+    
 </template>
 
 <script>
@@ -61,7 +64,8 @@ export default {
                          if(user.status=="1000"){
                              //将登录信息存放到，store中，进行管理
                              _this.$store.commit('SAVE_USERINFO',user)
-                             _this.$store.commit('SAVE_USERSTATE',true)
+                             _this.$store.commit('SAVE_USERSTATE',"true")
+                             _this.$store.commit('SAVE_REFRESH',true)
                              _this.$router.replace('/')
                          }else{
                               $("#error").text("用户或密码不正确")
