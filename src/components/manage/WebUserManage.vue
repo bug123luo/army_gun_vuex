@@ -1,13 +1,14 @@
+<!--web用户管理-->
 <template>
-  <div class="hello">
+  <div class="webUserManage">
        <div class="main-content">
-        </div>
+       </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: 'WebUserManage',
   data () {
     return {
     }

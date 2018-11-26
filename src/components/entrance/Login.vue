@@ -5,16 +5,15 @@
                 <div class="wel">用户登录</div>
                 <form id="login_form" method="POST">
                     <div class="Login">
-                        <img src="img/yonghu.png"/>
+                        <img v-bind:src=""/>
                         <p><input type="text" id="userName"  placeholder="用户名" ref="userName"></p>
                     </div>
                     <div class="pass">
-                        <img src="img/pass.png"/>
+                        <img v-bind:src="yonghu"/>
                         <p><input type="password" id="passWord"  placeholder="请输入密码" ref="passWord"></p>
                     </div>
                     <div></div>
                     <p><input class="sure" type="button" id="login" @click="loginSubmit()" value="登录"/></p>
-
                 </form>
                 <dl class="sign">
                     <dt><a href="retrievePassword.html">忘记密码？</a></dt>
@@ -23,13 +22,16 @@
                 <div class="clearfix"></div>
                 <div class="rem"><input class="kuai" type="checkbox" value="1"/>
                     <p>记住密码</p></div>
+                    
                 <div class="text-center">
                     <span id="error" style="color:red"></span>
                     <span id="errorpass" style="color:red"></span>
                 </div>
             </div>
-            <div class="jpg"><img src="img/beijing.png"/></div>
+            <div class="jpg"><img v-bind:src="../../static/assets/img/beijing.png"/></div>
         </div>
+
+      
     </div>
 </template>
 
@@ -38,7 +40,7 @@ export default {
   name: "Login",
   data() {
     return {
-
+        yonghu=  require('/static/assets/img/yonghu.png')
     };
   },
   methods: {

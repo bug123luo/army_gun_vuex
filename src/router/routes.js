@@ -12,6 +12,10 @@ import FinalStorage from "@/components/main/other/FinalStorage"
 import Map from "@/components/main/Map"
 import Home from "@/components/main/Home"
 import Notifications from "@/components/main/other/Notifications"
+import RoleManage from "@/components/manage/RoleManage"
+import SosMessage from "@/components/main/other/SosMessage"
+import FindMap from "@/components/main/other/FindMap"
+import Mission from "@/components/main/other/Mission"
 
 
 export const routes = [
@@ -21,16 +25,20 @@ export const routes = [
    [
       { path: "", name: "map", component:Map },
       { path: "map", name: "", component: Map },
-      { path: "/elements", name: "elements", component: Elements },
+      { path: "/elements", name: "elements",component: Elements },
       { path: "/tables", name: "tables", component: Tables },
-      { path: "/gunList", name: "gunList", component: GunList },
+      { path: "/gunList", name: "枪支列表", component: GunList },
       { path: "/deliveryWarehouse", name: "deliveryWarehouse", component: DeliveryWarehouse },
       { path: "/allocationGun", name: "allocationGun", component: AllocationGun },
-      { path: "/storageWarehouse", name: "storageWarehouse", component: StorageWarehouse },
-      { path: "/distributionStorage", name: "distributionStorage", component: DistributionStorage },
-      { path: "/predistribution", name: "predistribution", component: Predistribution },
-      { path: "/finalStorage", name: "finalStorage", component: FinalStorage },
+      { path: "/storageWarehouse", name: "枪支入库操作", component: StorageWarehouse },
+      { path: "/distributionStorage", name: "枪支分配",  component: DistributionStorage },
+      { path: "/predistribution", name: "枪支预出库操作", component: Predistribution },
+      { path: "/finalStorage", name: "枪支出库操作", component: FinalStorage },
       { path: "/notifications", name: "notifications", component: Notifications },
+      { path: "/sosMessage", name: "警告信息", component: SosMessage },
+      { path: "/findMap", name: "findMap", component: FindMap },
+      { path: "/mission", name: "离位启停", component: Mission },
+      { path: "/system/roleManage", name: "角色管理", component: RoleManage },
       { path: "/*", redirect: '/map' },//找不到页面的时候，重定向到主页
    ]
   },

@@ -5,14 +5,14 @@
       <!-- MAIN CONTENT -->
 			<div class="main-content">
 				<div class="container-fluid">
-					<h3 class="page-title">Tables</h3>
+				<!-- 	<h3 class="page-title">Tables</h3> -->
 					
 					<div class="row">
 						<div class="col-md-12">
 							<!-- BORDERED TABLE -->
 							<div class="panel">
 								<div class="panel-heading">
-									<h3 class="panel-title">枪支列表</h3>
+									<h3 class="panel-title">{{ $route.name}}</h3>
 								</div>
                 <div class="col-md-offset-10">
                   <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModalAdd" @click="createGunS">
@@ -242,7 +242,6 @@
 							</div>
 						</form>	
 				<!-- Modal -->
-        
   </div>
 </template>
 
@@ -286,6 +285,7 @@ export default {
 				 */
         // 数据数组有变化将触发此函数
         if ($("#cAll").checked) {
+          alert(123);
           $(".gIdcheckItem").prop("checked", $(this).prop("checked"));
         }else if(this.checkDataIds.length <  $(".gIdcheckItem").length){
                     $("#cAll").prop("checked", false);
@@ -424,7 +424,9 @@ export default {
               var data = response.data;
               if (response.data.status == "1000") {
                 $("#batchAllocation").attr("disabled", "disabled");
-                _this.getGunLists(_this.cur);
+                 _this.checkDataIds = [];
+                 _this.getGunLists(_this.cur);
+                 $(".gIdcheckItem:checked").prop("checked", false);
                 Lobibox.notify("success", {
                   size: "mini",
                   msg: response.data.errorMessage
@@ -463,9 +465,7 @@ export default {
           },
           function() {
             _this.$axios
-              .delete(
-                "/gun/deleteGun?gunId=" + _this.checkDataIds + "&type=" + 1
-              )
+              .delete("/gun/deleteGun?gunId="+_this.checkDataIds+"&type=1")
               .then(response => {
                 var data = response.data;
                 if (response.data.status == "1000") {
@@ -517,29 +517,30 @@ export default {
     },
     //新增枪支信息
     createGun(e) {
+      let _this=this;
       if (
-        !this.$refs.gunId.value ||
-        !this.$refs.gunModel.value ||
-        !this.$refs.gunType.value
+        !_this.$refs.gunId.value ||
+        !_this.$refs.gunModel.value ||
+        !_this.$refs.gunType.value
       ) {
         layer.alert("请添加对应的信息!");
       } else {
         var qs = require("qs");
         let params = new URLSearchParams();
-        params.append("gunId", this.$refs.gunId.value),
-          params.append("gunModel", this.$refs.gunModel.value),
-          params.append("gunType", this.$refs.gunType.value),
-          params.append("gunMac", this.$refs.gunMac.value),
-          params.append("warehouseId", this.$refs.warehouseId.value),
-          params.append("warehouseName", this.$refs.warehouseName.value);
+          params.append("gunId", _this.$refs.gunId.value),
+          params.append("gunModel", _this.$refs.gunModel.value),
+          params.append("gunType", _this.$refs.gunType.value),
+          params.append("gunMac", _this.$refs.gunMac.value),
+          params.append("warehouseId", _this.$refs.warehouseId.value),
+          params.append("warehouseName", _this.$refs.warehouseName.value);
 
-        this.$axios
+        _this.$axios
           .post("/gun/createGun", params)
           .then(response => {
             console.log(response.data);
             if (response.data.status == "1000") {
               $("#exampleModalAdd").modal("hide");
-              this.getGunLists(this.cur);
+              _this.getGunLists(_this.cur);
               Lobibox.notify("success", {
                 size: "mini",
                 msg: response.data.errorMessage

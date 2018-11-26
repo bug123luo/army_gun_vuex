@@ -1,13 +1,15 @@
+<!--菜单管理-->
 <template>
-  <div class="hello">
+  <div class="menuManage">
        <div class="main-content">
-        </div>
+          
+       </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: 'MenuManage',
   data () {
     return {
     }

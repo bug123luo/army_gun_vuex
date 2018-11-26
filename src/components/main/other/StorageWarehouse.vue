@@ -4,7 +4,7 @@
       <!-- MAIN CONTENT -->
 			<div class="main-content">
 				<div class="container-fluid">
-					<h3 class="page-title">枪支入库操作</h3>
+					<h3 class="page-title">{{ $route.name}}</h3>
 					<div class="row">
 
                         	<!-- INPUT SIZING -->

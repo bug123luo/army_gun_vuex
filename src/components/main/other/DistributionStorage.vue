@@ -4,7 +4,7 @@
         <!-- MAIN CONTENT -->
 			<div class="main-content">
 				<div class="container-fluid">
-					<h3 class="page-title">枪支分配</h3>
+					<h3 class="page-title">{{ $route.name}}</h3>
 					<div class="row">
 						<!-- INPUT SIZING -->
 							<div class="panel">
@@ -120,7 +120,6 @@
 				</div>
 			</div>
 			<!-- END MAIN CONTENT -->
-{{checkDataIdsNP}}
   </div>
 </template>
 <script>
@@ -292,7 +291,7 @@ export default {
     },
     //获取没有绑定的了腕表的用户
     getUserApp() {
-      this.$axios.get("/gunUser/readGunUserNoBinding").then(response => {
+      this.$axios.get("/gunUser/readGunUserNoBinding?type=0").then(response => {
         console.log(response.data.extend.gunUserList);
         this.userAppList = response.data.extend.gunUserList;
       });

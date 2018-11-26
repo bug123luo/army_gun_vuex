@@ -4,7 +4,7 @@
 <!-- MAIN CONTENT -->
 			<div class="main-content">
 				<div class="container-fluid">
-					<h3 class="page-title">枪支出库操作</h3>
+					<h3 class="page-title">{{ $route.name}}</h3>
 					<div class="row">
 						
 
@@ -12,7 +12,7 @@
 							<div class="panel">
                 <div class="panel-body">
                   <div class="layui-inline">
-                    截止时间：<input type="text" class="layui-input" id="returnTime"  v-model="returnTime">
+                    截止时间：<input type="date" class="layui-input" id="returnTime"  v-model="returnTime">
                   </div>
                   <span class="layui-word-aux" id="test4"></span>
                 </div>  
@@ -126,7 +126,7 @@ export default {
   methods: {
     //查询所有可以进行预出库的枪支
     getAppListPreselected(pn) {
-      this.$axios.get("/appGun/readAppGunBinding?pn="+pn).then(response => {
+      this.$axios.get("/appGun/readAppGunBinding?pn="+pn+"&type=1").then(response => {
         console.log(response.data.extend.pageInfo.list);
         this.appListPreselected = response.data.extend.pageInfo.list;
         var listPage = response.data.extend.pageInfo;
@@ -157,6 +157,7 @@ export default {
               _this.returnTime
           )
           .then(response => {
+          
             var result=response.data;
             if(result.status=="1000"){
               Lobibox.notify("success", {

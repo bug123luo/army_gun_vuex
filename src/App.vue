@@ -7,12 +7,6 @@
 <script>
 export default {
   name: 'App',
-  data(){
-
-  },
-  created(){
-    //this.$router.go(0);
-  }
 }
 </script>
 

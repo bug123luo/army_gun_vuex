@@ -5,11 +5,11 @@
                 <div class="wel">用户登录</div>
                 <form id="login_form" method="POST">
                     <div class="Login">
-                        <img src="img/yonghu.png"/>
+                        <img v-bind:src="yonghu"/>
                         <p><input type="text" id="userName"  placeholder="用户名" ref="userName"></p>
                     </div>
                     <div class="pass">
-                        <img src="img/pass.png"/>
+                        <img v-bind:src="pass"/>
                         <p><input type="password" id="passWord"  placeholder="请输入密码" ref="passWord"></p>
                     </div>
                     <div></div>
@@ -29,7 +29,7 @@
                     <span id="errorpass" style="color:red"></span>
                 </div>
             </div>
-            <div class="jpg"><img src="img/beijing.png"/></div>
+            <div class="jpg"><img v-bind:src="beijing"/></div>
         </div>
         
     </div>
@@ -41,7 +41,9 @@ export default {
   name: "Login",
   data() {
     return {
-
+        yonghu:'/static/assets/img/yonghu.png',
+        pass:'/static/assets/img/pass.png',
+        beijing:'/static/assets/img/beijing.png'
     };
   },
   methods: {
@@ -67,6 +69,9 @@ export default {
                              _this.$store.commit('SAVE_USERSTATE',"true")
                              _this.$store.commit('SAVE_REFRESH',true)
                              _this.$router.replace('/')
+                         }else if(user.status=="1001"){
+                              //$("#error").text("用户或密码不正确")
+                            layer.alert(user.errorMessage);
                          }else{
                               $("#error").text("用户或密码不正确")
                          }
