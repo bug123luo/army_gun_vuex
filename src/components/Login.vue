@@ -13,7 +13,7 @@
                         <p><input type="password" id="passWord"  placeholder="请输入密码" ref="passWord"></p>
                     </div>
                     <div></div>
-                    <p><input class="sure" type="button" id="login" @click="loginSubmit()" value="登录"/></p>
+                    <p><input class="sure" type="button" id="login" @click="loginSubmit($event)"  value="登录"/></p>
 <!-- {{this.$store.state.userState}}
         {{this.$store.state.userInfo}} -->
                 </form>
@@ -30,6 +30,9 @@
                 </div>
             </div>
             <div class="jpg"><img v-bind:src="beijing"/></div>
+
+             <div id="box">
+    </div>
         </div>
         
     </div>
@@ -47,7 +50,7 @@ export default {
     };
   },
   methods: {
-    loginSubmit() {
+    loginSubmit(ev) {
       //获取登录信息
       let _this = this;
       var userName = _this.$refs.userName.value;
@@ -76,9 +79,18 @@ export default {
                               $("#error").text("用户或密码不正确")
                          }
                      })
-      }
+               }
+       }
+    },
+    created(){
+        var lett = this;
+            document.onkeydown = function(e) {
+            var key = window.event.keyCode;
+            if (key == 13) {
+            lett.loginSubmit();
+            }
+        }
     }
-  }
 };
 </script>
 

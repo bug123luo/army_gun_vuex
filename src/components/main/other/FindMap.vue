@@ -2,6 +2,75 @@
 <template>
   <div id="findMap">
     <div id="allmap" ref="allmap"></div>
+   <!--    <div class="news" id="news">
+      <div class="follows" style="margin-top:15px; margin-left:20px; float:left;">
+              <img src="img/suixing.png" style="float:left;">
+              <dl style="color:#18f084; float:left; margin-left:10px; margin-top:-2px; padding-right:20px; border-right:1px solid rgba(255,255,255,0.70)">
+                  <dd style="font-size:14px;"><span id="follow" style="font-size:16px;"></span>个</dd>
+                  <dd style="font-size:14px;">随行在线数</dd>
+              </dl>
+          </div>
+          <div class="offlines" style="margin-top:15px;float:left; padding-left:20px;">
+              <img src="img/liwei.png" style="float:left; ">
+              <dl style="color:#2db5ee; float:left; margin-left:10px; margin-top:-2px; padding-right:20px; border-right:1px solid rgba(255,255,255,0.70)">
+                  <dd style="font-size:14px;"><span id="dislocation" style="font-size:16px"></span>个</dd>
+                  <dd style="font-size:14px;">随行离位数</dd>
+              </dl>
+          </div>
+          <div class="dislocations" style="margin-top:15px;float:left; padding-left:20px;">
+              <img src="img/lixian.png" style="float:left;">
+              <dl style="color:#fa117a; float:left; margin-left:10px; margin-top:-2px;">
+                  <dd style="font-size:14px;"><span id="offline" style="font-size:16px"></span>个</dd>
+                  <dd style="font-size:14px;">枪支离位数</dd>
+              </dl>
+          </div>
+      </div> -->
+
+      <div v-if="type!='1'">
+        <div   class="state" style="width:420px; height:60px; background-color:rgba(255,255,255); position:absolute; z-index:99999; box-shadow:0px 0px 4px #cdcdcd; right:10px; top:100px; border-radius:4px;">
+          <div @click="previous($event)" style="margin-top:16px; margin-left:20px; float:left;" >
+            <img src="static/assets/img/fanhui.png">
+          </div>
+            <div style="width:1px; height:40px; background-color:#dddddd; float:left; margin-left:20px; margin-top:10px;"></div>
+            <button v-if="type=='2'" type="button" @click="pushToAssist(0)" class="btn btn-primary" style="float:right; margin-right:20px; margin-top:12px;">一键协助查找</button>
+            <button v-if="type=='3'" type="button" @click="pushToAssist(1)" class="btn btn-primary" style="float:right; margin-right:20px; margin-top:12px;">一键紧急支援</button>
+
+        </div>
+
+        <div   class="state" style="width:280px; height:60px ;position:absolute; z-index:999999; right:80px; top:100px; ">
+          <div @mouseover="hover(true)" @mousedown="hover(false)" style=" font-size:18px; text-align:center; margin-top:16px;  margin-left:-100px;">附近警员</div>
+        </div>  
+
+        <div v-show="state" class="state" style="width:420px; height:300px; background-color:rgba(255,255,255); position:absolute; z-index:99999; box-shadow:0px 0px 4px #cdcdcd; right:10px; top:166px; border-radius:4px;">
+
+             <table class="table table-condensed" id="gunTag_OffNormal_table"
+                  style="width:400px; margin-left:10px; margin-top:10px;">
+                <button type="button" id="close2" style="color: #ffffff" class="close" data-dismiss="model" aria-hidden="true">
+                    &times
+                </button>
+                <!-- <h4 class="modal-title text-center" style="color:rgba(255,255,255,1); margin-top: 10px;margin-bottom:20px;">
+                    枪支离位列表</h4> -->
+                <thead>
+                <tr style="color:#4d4d4d; font-size:14PX; background-color:#fff;">
+                    <th class="text-center">枪号</th>
+                    <th class="text-center">IMEI</th>
+                    <th class="text-center">状态</th>
+                    <th class="text-center">操作</th>
+                    <!--<th class="text-center">状态</th>-->
+                </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="gunLocation in gunLocationList" :key="gunLocation.id" style="color:#4d4d4d; text-align:center; font-size:14PX; background-color:#fff;">
+                    <td>{{gunLocation.gunId}}</td>
+                    <td>{{gunLocation.gunMac}}</td>
+                    <td>{{gunLocation.gunDeviceState}}</td>
+                    <td>协助查找</td>
+                  </tr>
+                </tbody>
+            </table>
+        </div>
+      </div>
+
   </div>
 </template>
  
@@ -14,6 +83,9 @@ export default {
       log: "",
       lat: "",
       type:"",
+      sosId:"",
+      state:false,
+      appImeiList:[],
     };
   },
   methods: {
@@ -210,8 +282,14 @@ export default {
       var lineon="<div style='height: 1px;border-bottom: 1px dashed rgba(14,11,12,0.2); width:128px; margin-bottom: -18px; margin-top: 2px;'></div>";
       //获取枪支动态数据
       _this.$axios.get("/gunLocation/readRoundDevice?lng="+this.log+"&lat="+this.lat).then(response => {
+        //保存周围在线的警员
+          _this.gunLocationList = response.data.extend.gunRoundDevices;
+        for (const iterator of  _this.gunLocationList) {
+            _this.appImeiList.push(iterator.gunMac);
+        }
+         console.log("周围在线");
         console.log(response.data.extend.gunRoundDevices);
-        _this.gunLocationList = response.data.extend.gunRoundDevices;
+      
         //遍历
         $.each(_this.gunLocationList, function(i, p) {
           getLongitude[i] = p.longitude;
@@ -317,18 +395,41 @@ export default {
                     layer.alert(response.data.extend.realLocations);
         });
     }
-
+    },
+    //协助查找
+    pushToAssist(type) {
+      alert(type)
+       let _this=this;
+       let params = new URLSearchParams();
+          params.append("appImei",_this.appImeiList),
+          params.append("sosId",  _this.sosId),
+          params.append("type",type),
+      _this.$axios.post('/sosMessage/createForHelpGun?appImei='+_this.appImeiList+"&sosId="+ _this.sosId+"&type="+type).then(response=>{
+        console.log(response.data)
+      })
     
-    },//查询具体位置
-   
+    },
+    //回到上次浏览的位置
+   previous(){
+       history.go(-1);
+   },
+   hover:function (params) {
+     this.state=Boolean(params)
+   },
+   hovers:function (params) {
+     this.state=false
+   },
   },
   mounted() {
-    this.getFindMap();
+     this.getFindMap();
   },
   created() {
+  
     this.log = this.$route.params.log;
     this.lat = this.$route.params.lat;
     this.type = this.$route.params.type;
+    this.sosId = this.$route.params.sosId;
+    
   }
 };
 </script>
@@ -348,4 +449,17 @@ export default {
 .anchorBL{
     display:none; 
 } */
+
+.news{
+	width: 454px;
+	height: 70px;
+	background-color:rgba(0,0,0,0.75);
+	position: absolute;
+	z-index: 99999;
+	right: 1%;
+	top:100px;
+	border:1px solid rgba(255,255,255,0.70)
+}
+#news p{ float:left; color:#F00; font-family:"微软雅黑"}
+#news li a{ font-size:14px; margin-left:10px;margin-top:5px; float:left; color:#06F; text-decoration:underline;font-family:"微软雅黑"}
 </style>

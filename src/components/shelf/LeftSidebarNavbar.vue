@@ -24,7 +24,7 @@
              
               <ul class="nav" v-for="(p,index) in permmissionLists" :key="">
               <li v-if="p.children!=null">
-                  <a href="#subPages" data-toggle="collapse" class="collapsed"><i :class="p.icon"></i> <span>系统管理</span>
+                  <a href="#subPages" data-toggle="collapse" class="collapsed"><i :class="p.icon"></i> <span>{{p.descpt}}</span>
                     <i class="icon-submenu lnr lnr-chevron-left"></i></a>
                   <div id="subPages" class="collapse ">
                     <ul class="nav" v-for="(c,index) in p.children" :key="" >
@@ -73,7 +73,6 @@ export default {
   data() {
     return {
       permmissionLists:[],
-      permmissionListsChildren:[],
     };
   },
   methods: {
@@ -116,11 +115,11 @@ export default {
     getMenu(){
        let userInfo=JSON.parse(this.$store.state.userInfo);
        this.permmissionLists=userInfo.extend.permissionLists;
-       this.permmissionListsChildren=permmissionLists.children;
+       //this.permmissionListsChildren=permmissionLists.children;
        for (const key in this.permmissionLists) {
           //alert(this.permmissionLists[key].children)
        }
-       console.log(this.permmissionLists);
+       //console.log(this.permmissionLists);
        
     }
   },

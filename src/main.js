@@ -47,6 +47,7 @@ axios.interceptors.response.use(
     //alert(error)
     if (error =="Error: Network Error"){
       layer.msg("网址维护中......");
+      next("/login")
     } 
     if (error.response) {
       switch (error.response.status) {

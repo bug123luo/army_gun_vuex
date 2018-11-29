@@ -40,13 +40,15 @@
                                        
                                         <td class="text-center">
                                                 <!-- Button trigger modal -->
-                                                <router-link :to="{name:'findMap',params:{log:sosMessage.longitude,lat:sosMessage.latitude,type:1}}" tag="button" class="btn btn-warning btn-sm">
+                                                <router-link :to="{name:'findMap',params:{sosId:sosMessage.id,log:sosMessage.longitude,lat:sosMessage.latitude,type:1}}" tag="button" class="btn btn-warning btn-sm">
                                                   位置详情
                                                 </router-link>
-                                                <router-link :to="{name:'findMap',params:{log:sosMessage.longitude,lat:sosMessage.latitude,type:2}}" tag="button" class="btn btn-primary btn-sm">协助查找</router-link>
-                                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal" v-on:click="">
-                                                    紧急支援
-                                                </button>
+                                                <router-link  v-if="(sosMessage.gunMac=='')"  :to="{name:'findMap',params:{sosId:sosMessage.id,log:sosMessage.longitude,lat:sosMessage.latitude,type:3}}" tag="button" class="btn btn-danger btn-sm">
+                                                  紧急支援
+                                                </router-link>
+                                                <router-link  v-else :to="{name:'findMap',params:{sosId:sosMessage.id,log:sosMessage.longitude,lat:sosMessage.latitude,type:2}}" tag="button" class="btn btn-primary btn-sm">
+                                                  协助查找
+                                                </router-link>
                                                 
                                                 <!-- Button trigger modal -->
                                         </td>
@@ -117,7 +119,6 @@ export default {
         }
         // 数据数组有变化将触发此函数
         if ($("#cAll").checked) {
-            alert(123);
           $(".gIdcheckItem").prop("checked", $(this).prop("checked"));
         }else if(this.checkDataIds.length <  $(".gIdcheckItem").length){
                     $("#cAll").prop("checked", false);
@@ -172,7 +173,7 @@ export default {
     //进行模糊查询
     filterBy(sosMessageList, value) {
       return sosMessageList.filter(function(sosMessage) {
-        return sosMessage.gunMac.match(value);
+       return sosMessage.gunMac.match(value);
       });
     },
     //协助查找

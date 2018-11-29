@@ -24,14 +24,14 @@
 <script>
 import Footer from "../shelf/Footer"
 import LeftSidebarNavbar from "../shelf/LeftSidebarNavbar";
-import Navbar from "../shelf/Navbar";
+//import Navbar from "../shelf/Navbar";
 
 export default {
   name: 'Home',
   components:{
     appFooter:Footer,
     appLeftSidebarNavbar:LeftSidebarNavbar,
-    appNavbar:Navbar,
+    //appNavbar:Navbar,
   }
 }
 </script>
