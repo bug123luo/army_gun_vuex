@@ -59,7 +59,7 @@
             style="color:#4d4d4d; text-align:center; font-size:14PX; background-color:#fff;"
           >
             <td>{{gunLocation.gunId}}</td>
-            <td>{{gunLocation.gunMac}}</td>
+            <td>{{gunLocation.appIMEI}}</td>
             <td>{{gunLocation.gunDeviceState}}</td>
             <td>
               <span @click="findLocation(gunLocation.gunMac)" class="label label-success">查询</span>
@@ -196,10 +196,12 @@ export default {
       let _this = this;
       //启动定时
       if(_this.setState){
+       // alert("开启"+_this.setState)
         setTimeout(() => {
                 _this.findMap(map);
             }, 1000); 
       }else{
+        //alert("结束"+_this.setState)
         //关闭定时
         clearTimeout(()=>{_this.findMap(map)});
       }
@@ -216,20 +218,22 @@ export default {
         "<div style='height: 1px;border-bottom: 1px dashed rgba(14,11,12,0.2); width:128px; margin-bottom: -18px; margin-top: 2px;'></div>";
       //获取枪支动态数据
       _this.$axios
-        .get("/gunLocation/readGunDynamic")
+        .get("/gunLocation/readGunDynamicOptimize")
         .then(response => {
-          console.log(response.data.extend.gunLocations);
+          //console.log("你是不");
+          //console.log(response.data.extend.gunLocations);
           _this.gunLocationList = response.data.extend.gunLocations;
           //遍历
           $.each(_this.gunLocationList, function(i, p) {
             getLongitude[i] = p.longitude;
             getLatitude[i] = p.latitude;
-
+            //alert(p.realTimeState)
             /* Start  枪支图片 */
-            myIcon = new BMap.Icon(
-              "/static/assets/img/shortGun1.png",
-              new BMap.Size(68, 75)
-            ); //手枪
+            if(p.realTimeState==0){
+               myIcon = new BMap.Icon("/static/assets/img/normalGun.png",new BMap.Size(68, 75)); //手枪
+            }else{
+               myIcon = new BMap.Icon("/static/assets/img/offNormalGun.png",new BMap.Size(68, 75)); //手枪
+            }
             /* End  枪支图片 */
 
             var marker = null;
@@ -247,6 +251,7 @@ export default {
             //1、鼠标左键单击事件
             function AddClickHandler(marker) {
               marker.addEventListener("click", function(e) {
+                //alert(p.gunMac)
                 _this.findLocation(p.gunMac);
                 //getGunLocationClick(p.gunMac);
               });
@@ -304,7 +309,7 @@ export default {
 
             marker.addEventListener("mouseover", function(e) {
               //alert("tangchu")
-              _this.setState=false;//关闭定时
+              _this.setState=true;//关闭定时
               //alert("触摸"+_this.setState)
               //创建标注的hover事件,触摸事件
               // clearTimeout(()=>{_this.findMap(map)});
@@ -373,8 +378,10 @@ export default {
     },
     //扩大具体位置
     findLocation(gunId) {
+      alert(gunId)
       let _this = this;
-     // _this.map.clearOverlays(); // 清除标注信息
+     _this.map.clearOverlays(); // 清除标注信息
+      _this.setState=true;
       var getLongitude = [];
       var getLatitude = [];
       //图标
@@ -387,7 +394,7 @@ export default {
         "<div style='height: 1px;border-bottom: 1px dashed rgba(14,11,12,0.2); width:128px; margin-bottom: -18px; margin-top: 2px;'></div>";
       //获取枪支动态数据
       _this.$axios
-        .get("/gunLocation/readGunDynamic?gunId=" + gunId)
+        .get("/gunLocation/readGunDynamicOptimize?gunId=" + gunId)
         .then(response => {
           var result = response.data;
           //遍历
@@ -395,10 +402,11 @@ export default {
             getLongitude[i] = p.longitude;
             getLatitude[i] = p.latitude;
             /* Start  枪支图片 */
-            myIcon = new BMap.Icon(
-              "/static/assets/img/shortGun1.png",
-              new BMap.Size(68, 75)
-            ); //手枪
+            if(p.realTimeState==0){
+               myIcon = new BMap.Icon("/static/assets/img/normalGun.png",new BMap.Size(68, 75)); //手枪
+            }else{
+               myIcon = new BMap.Icon("/static/assets/img/offNormalGun.png",new BMap.Size(68, 75)); //手枪
+            }
             /* End  枪支图片 */
 
             var marker = null;
@@ -514,6 +522,15 @@ export default {
     findTrajectory(appImei) {
         let _this=this;
         _this.map.clearOverlays(); // 清除标注信息
+        _this.setState=true;
+/* 
+        if (_this.setState) {
+            return
+        } else {
+            deviceLocation2(deviceNoId);
+        }
+        _this.setState = !_this.setState;
+ */
         var label = [];//保存日期
         var value = [];//数量
         var points = []; // 添加折线运动轨迹
@@ -679,7 +696,7 @@ export default {
       let _this=this
       _this.setState=true
       _this.getReadGunDynamicList(_this.pn)
-      _this.findLocation(_this.map)
+     // _this.findLocation(_this.map)
   },
   computed: {
     indexs: function() {

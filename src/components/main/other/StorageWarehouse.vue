@@ -17,11 +17,11 @@
 								</button>
 							</div> -->
 
-						<div class="col-md-6">
+						<div class="col-md-12">
 							<!-- TASKS -->
 							<div class="panel">
 								<div class="panel-heading">
-									<h3 class="panel-title">已出库枪支</h3>
+									<h3 class="panel-title">军械员操作入库</h3>
 									<div class="right">
 										<button type="button" class="btn-toggle-collapse"><i class="lnr lnr-chevron-up"></i></button>
 										<button type="button" class="btn-remove"><i class="lnr lnr-cross"></i></button>
@@ -34,8 +34,9 @@
 												<th><input id="wrAll" type="checkbox" @click="checkAll($event)"></th>
 												<th class="text-center">设备编号</th>
 												<th class="text-center">枪支编号</th>
-                                                <th class="text-center">出库时间</th>
-                                                <th class="text-center">操作</th>
+                        <th class="text-center">枪支蓝牙</th>
+                        <th class="text-center">出库时间</th>
+                        <th class="text-center">操作</th>
 											</tr>
 										</thead>
                                         
@@ -46,18 +47,23 @@
                                                 </td>
 												<td class="text-center">{{warehouse.appId}}</td>
 												<td class="text-center">{{warehouse.gunId}}</td>
+                        <td class="text-center">{{warehouse.guns.gunMac}}</td>
 												<td class="text-center">{{warehouse.warehouseOutTime | formatDate}}</td>
                                                 <td class="text-center">
 	                                                    <!-- Button trigger modal -->
 														<button type="button" class="btn btn-primary btn-sm"  v-on:click="storagePreselected(warehouse.gunId,warehouse.apps.appImei)">
-															预入库
+															  入库
 														</button>
+                             <button type="button" class="btn btn-warning btn-sm"  v-on:click="revocationStorage(warehouses.gunId,warehouses.guns.gunMac,warehouses.apps.appImei)">
+                                撤销
+                            </button>
 														<!-- Button trigger modal -->
                         </td>
 											</tr>
 										</tbody>
 									</table>
-
+                              
+                    <div class="text-center"  v-show="total==0"> <span style="color:orange"> 暂无数据...... </span> </div>
                      <div class="text-center" v-show="total>pageSize">
                       <div class="row">
                         <!-- 分页显示 -->
@@ -84,8 +90,7 @@
 							<!-- END TASKS -->
 						</div>
 						
-						<div class="col-md-6">
-							<!-- TASKS -->
+					<!-- 	<div class="col-md-6">
 							<div class="panel">
 								<div class="panel-heading">
 									<h3 class="panel-title">军械员操作入库</h3>
@@ -101,8 +106,8 @@
 												<th><input id="wrAlls" type="checkbox" @click="checkAlls($event)"></th>
 												<th class="text-center">设备编号</th>
 												<th class="text-center">枪支编号</th>
-                                                <th class="text-center">枪支蓝牙</th>
-                                                <th class="text-center">操作</th>
+                        <th class="text-center">枪支蓝牙</th>
+                        <th class="text-center">操作</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -112,21 +117,18 @@
 												<td class="text-center">{{warehouses.gunId}}</td>
                         <td class="text-center">{{warehouses.guns.gunMac}}</td>
                         <td class="text-center">
-                            <!-- Button trigger modal -->
                             <button type="button" class="btn btn-primary btn-sm"  v-on:click="affirmStorage(warehouses.gunId,warehouses.guns.gunMac,warehouses.apps.appImei)">
                                 入库
                             </button>
                             <button type="button" class="btn btn-warning btn-sm"  v-on:click="revocationStorage(warehouses.gunId,warehouses.guns.gunMac,warehouses.apps.appImei)">
                                 撤销
                             </button>
-                            <!-- Button trigger modal -->
                         </td>
 											</tr>
 										</tbody>
 									</table>
                   <div class="text-center" v-show="totalj>pageSizej">
                       <div class="row">
-                        <!-- 分页显示 -->
                         <div class="page-bar" style=" margin:0 auto; margin-left:20%;">
                           <ul>
                               <li v-if="curj>1"><a v-on:click="curj=1,pageClickj()">首页</a></li>
@@ -145,8 +147,7 @@
                     </div>
 								</div>
 							</div>
-							<!-- END TASKS -->
-						</div>
+						</div> -->
 				<!-- 	{{appImeis}}{{totalj}}{{total}} -->
 					</div>
 				</div>
@@ -395,8 +396,7 @@ export default {
             "&appId=" +
             appImei +
             "&gunMac=" +
-            gunMac +
-            "&state=0"
+            gunMac
         )
         .then(response => {
           var result=response.data;

@@ -16,18 +16,26 @@ import RoleManage from "@/components/manage/RoleManage"
 import SosMessage from "@/components/main/other/SosMessage"
 import FindMap from "@/components/main/other/FindMap"
 import Mission from "@/components/main/other/Mission"
+import Device from "@/components/main/other/Device"
+import DataStatistics from "@/components/main/other/DataStatistics"
+import ProjectileBase from "@/components/main/other/ProjectileBase"
+
+
 
 
 export const routes = [
   { path: '/login', name: 'Login', component: Login },
     
-  { path: '/', name: 'Home', component: Home, children:
+  { path: '/home', name: 'Home', component: Home, children:
    [
       { path: "", name: "map", component:Map },
-      { path: "map", name: "", component: Map },
+      { path: "/map", name: "", component: Map },
       { path: "/elements", name: "elements",component: Elements },
       { path: "/tables", name: "tables", component: Tables },
+      { path: "/dataStatistics", name: "数据统计", component: DataStatistics },
+      { path: "/projectileBase", name: "射弹基数", component: ProjectileBase },
       { path: "/gunList", name: "枪支列表", component: GunList },
+      { path: "/device", name: "设备列表", component: Device },
       { path: "/deliveryWarehouse", name: "deliveryWarehouse", component: DeliveryWarehouse },
       { path: "/allocationGun", name: "allocationGun", component: AllocationGun },
       { path: "/storageWarehouse", name: "枪支入库操作", component: StorageWarehouse },
@@ -39,7 +47,8 @@ export const routes = [
       { path: "/findMap", name: "findMap", component: FindMap },
       { path: "/mission", name: "离位启停", component: Mission },
       { path: "/system/roleManage", name: "角色管理", component: RoleManage },
-      { path: "/*", redirect: '/map' },//找不到页面的时候，重定向到主页
+        { path: "/*", redirect: '/home' },//找不到页面的时候，重定向到主页
+        { path: "/*/**", redirect: '/home' },//找不到页面的时候，重定向到主页
    ]
   },
   { path: "*", redirect: '/login' },//找不到页面的时候，重定向到主页

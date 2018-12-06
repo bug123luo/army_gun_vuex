@@ -43,6 +43,7 @@
 										</tbody>
 									</table>
 
+                  <div class="text-center"  v-show="total==0"> <span style="color:orange"> 暂无数据...... </span> </div>
 
                   <div class="text-center" v-show="total>pageSize">
                       <div class="row">

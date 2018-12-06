@@ -33,6 +33,11 @@
                                 </option>
                               </select>
                           </div>
+                          <div class="col-sm-2">
+                            <button type="button" class="btn btn-danger btn-sm"  v-on:click="outboundInitialization()">
+															初始化出库
+														</button>
+                          </div>  
                       </div>
                     </form>
                   
@@ -199,7 +204,7 @@ export default {
     //查询所有可以进行预出库的枪支
     getGunListNotPreselected(pn) {
       this.$axios.get("/gun/readGunsNotPreselected?pn=" + pn).then(response => {
-        console.log(response.data.extend.pageInfo);
+        //console.log(response.data.extend.pageInfo);
         this.gunListNotPreselected = response.data.extend.pageInfo.list;
         var listPage = response.data.extend.pageInfo;
         this.all = listPage.pages; //总页数
@@ -292,18 +297,34 @@ export default {
     //获取没有绑定的了腕表的用户
     getUserApp() {
       this.$axios.get("/gunUser/readGunUserNoBinding?type=0").then(response => {
-        console.log(response.data.extend.gunUserList);
+        //console.log(response.data.extend.gunUserList);
         this.userAppList = response.data.extend.gunUserList;
       });
     },
     //获取设备用户
     getApp() {
       this.$axios.get("/app/readAppList").then(response => {
-        console.log(response.data.extend.pageInfo.list);
+        //console.log(response.data.extend.pageInfo.list);
         this.appList = response.data.extend.pageInfo.list;
       });
     },
-
+    //初始化，出库操作
+    outboundInitialization(){
+      this.$axios.put("/operation/outboundInitialization").then(response => {
+        if(response.data.status=="1000"){
+          this.getGunListNotPreselected(this.cur);
+          Lobibox.notify('success',{
+            size:"mini",
+            msg:response.data.errorMessage
+          })
+        }else{
+           Lobibox.notify('error',{
+            size:"mini",
+            msg:response.data.errorMessage
+          })
+        }
+      });
+    },
     //分页
     btnClick: function(data) {
       //页码点击事件

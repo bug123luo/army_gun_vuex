@@ -43,10 +43,10 @@
                                                 <router-link :to="{name:'findMap',params:{sosId:sosMessage.id,log:sosMessage.longitude,lat:sosMessage.latitude,type:1}}" tag="button" class="btn btn-warning btn-sm">
                                                   位置详情
                                                 </router-link>
-                                                <router-link  v-if="(sosMessage.gunMac=='')"  :to="{name:'findMap',params:{sosId:sosMessage.id,log:sosMessage.longitude,lat:sosMessage.latitude,type:3}}" tag="button" class="btn btn-danger btn-sm">
+                                                <router-link  v-if="(sosMessage.gunMac=='')"  :to="{name:'findMap',params:{sosId:sosMessage.id,log:sosMessage.longitude,lat:sosMessage.latitude,type:3,gunMac:sosMessage.gunMac}}" tag="button" class="btn btn-danger btn-sm">
                                                   紧急支援
                                                 </router-link>
-                                                <router-link  v-else :to="{name:'findMap',params:{sosId:sosMessage.id,log:sosMessage.longitude,lat:sosMessage.latitude,type:2}}" tag="button" class="btn btn-primary btn-sm">
+                                                <router-link  v-else :to="{name:'findMap',params:{sosId:sosMessage.id,log:sosMessage.longitude,lat:sosMessage.latitude,type:2,gunMac:sosMessage.gunMac}}" tag="button" class="btn btn-primary btn-sm">
                                                   协助查找
                                                 </router-link>
                                                 
@@ -59,7 +59,7 @@
                           <!--   <button type="button" class="btn btn-danger btn-sm" id="batchAllocation" disabled="disabled"  @click="">
                                         <i class="fa fa-trash-o"></i> 批量删除
                             </button> -->
-
+                          <div class="text-center"  v-show="total==0"> <span style="color:orange"> 暂无数据...... </span> </div>
                            <div class="text-center" v-show="total>pageSize">
                                 <div class="row">
                                     <!-- 分页显示 -->

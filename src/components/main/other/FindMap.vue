@@ -62,7 +62,7 @@
                 <tbody>
                   <tr v-for="gunLocation in gunLocationList" :key="gunLocation.id" style="color:#4d4d4d; text-align:center; font-size:14PX; background-color:#fff;">
                     <td>{{gunLocation.gunId}}</td>
-                    <td>{{gunLocation.gunMac}}</td>
+                    <td>{{gunLocation.appImei}}</td>
                     <td>{{gunLocation.gunDeviceState}}</td>
                     <td>协助查找</td>
                   </tr>
@@ -84,8 +84,10 @@ export default {
       lat: "",
       type:"",
       sosId:"",
+      gunMac:"",
       state:false,
       appImeiList:[],
+     
     };
   },
   methods: {
@@ -281,14 +283,14 @@ export default {
       //正常虚线
       var lineon="<div style='height: 1px;border-bottom: 1px dashed rgba(14,11,12,0.2); width:128px; margin-bottom: -18px; margin-top: 2px;'></div>";
       //获取枪支动态数据
-      _this.$axios.get("/gunLocation/readRoundDevice?lng="+this.log+"&lat="+this.lat).then(response => {
+      _this.$axios.get("/gunLocation/readRoundDevice?lng="+this.log+"&lat="+this.lat+"&gunMac="+this.gunMac).then(response => {
         //保存周围在线的警员
           _this.gunLocationList = response.data.extend.gunRoundDevices;
         for (const iterator of  _this.gunLocationList) {
-            _this.appImeiList.push(iterator.gunMac);
+            _this.appImeiList.push(iterator.appImei);
         }
-         console.log("周围在线");
-        console.log(response.data.extend.gunRoundDevices);
+         //console.log("周围在线");
+        //console.log(response.data.extend.gunRoundDevices);
       
         //遍历
         $.each(_this.gunLocationList, function(i, p) {
@@ -398,14 +400,24 @@ export default {
     },
     //协助查找
     pushToAssist(type) {
-      alert(type)
+      
        let _this=this;
+       alert(_this.appImeiList)
        let params = new URLSearchParams();
           params.append("appImei",_this.appImeiList),
           params.append("sosId",  _this.sosId),
           params.append("type",type),
       _this.$axios.post('/sosMessage/createForHelpGun?appImei='+_this.appImeiList+"&sosId="+ _this.sosId+"&type="+type).then(response=>{
-        console.log(response.data)
+        if (response.data.status == "1000") {
+              Lobibox.notify("success", {
+                size: "mini",
+                msg: response.data.errorMessage
+              });
+            } else if (response.data.status == "1001") {
+              layer.msg(response.data.errorMessage,{icon:3})
+            } else {
+              layer.msg(response.data.errorMessage,{icon:3})
+            }
       })
     
     },
@@ -429,6 +441,7 @@ export default {
     this.lat = this.$route.params.lat;
     this.type = this.$route.params.type;
     this.sosId = this.$route.params.sosId;
+    this.gunMac = this.$route.params.gunMac;
     
   }
 };
@@ -437,7 +450,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 @import "../../common/css/tag.css"; /*引入公共样式*/
-
 #allmap {
   height: 580px;
   overflow: hidden;
@@ -450,16 +462,4 @@ export default {
     display:none; 
 } */
 
-.news{
-	width: 454px;
-	height: 70px;
-	background-color:rgba(0,0,0,0.75);
-	position: absolute;
-	z-index: 99999;
-	right: 1%;
-	top:100px;
-	border:1px solid rgba(255,255,255,0.70)
-}
-#news p{ float:left; color:#F00; font-family:"微软雅黑"}
-#news li a{ font-size:14px; margin-left:10px;margin-top:5px; float:left; color:#06F; text-decoration:underline;font-family:"微软雅黑"}
 </style>

@@ -64,8 +64,9 @@
 											</tr>
 										</tbody>
 									</table>
+                  <div class="text-center"  v-show="total==0"> <span style="color:orange"> 暂无数据...... </span> </div>
 
-                  <button type="button" class="btn btn-danger btn-sm" id="batchAllocation" disabled="disabled"  @click="deleteGunAll">
+                  <button type="button" v-show="total!=0" class="btn btn-danger btn-sm" id="batchAllocation" disabled="disabled"  @click="deleteGunAll">
 											<i class="fa fa-trash-o"></i> 批量删除
 								  </button>
 

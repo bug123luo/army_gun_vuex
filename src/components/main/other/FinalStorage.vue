@@ -1,6 +1,7 @@
 <!--枪支最终出库，撤销-->
 <template>
   <div class="finalStorage">
+  
 <!-- MAIN CONTENT -->
 			<div class="main-content">
 				<div class="container-fluid">
@@ -11,14 +12,20 @@
 	                            <!-- INPUT SIZING -->
 							<div class="panel">
                 <div class="panel-body">
-                  <div class="layui-inline">
-                    截止时间：<input type="date" class="layui-input" id="returnTime"  v-model="returnTime">
-                  </div>
-                  <span class="layui-word-aux" id="test4"></span>
+
+                    <div class="layui-form-item">
+                     <!--  <label class="layui-form-label">
+                        截止时间：
+                      </label> -->
+                      <div class="layui-input-inline">
+                        截止时间：
+                        <input type="type"  class="layui-input"   id="returnTime" ref="returnTime" placeholder="请选择截止时间" >
+                      </div>
+                    </div>
+                 <!--  <div class="layui-inline">
+                    截止时间：<input type="type" class="layui-input" id="returnTime"  v-model="returnTime">
+                  </div> -->
                 </div>  
-							<!-- 	<div class="panel-body">
-									截止时间：<input type="date" name="returnTime" id="returnTime" v-model="returnTime">
-								</div> -->
 							</div>
 								
 
@@ -62,6 +69,7 @@
 											</tr>
 										</tbody>
 									</table>
+                 
 
                   <div class="text-center" v-show="total>pageSize">
                       <div class="row">
@@ -85,7 +93,7 @@
                         </div>
                       </div>
                     </div>
-
+                    <div class="text-center"  v-show="total==0"> <span style="color:orange"> 暂无数据...... </span> </div>
 								</div>
 							</div>
 							<!-- END TASKS -->
@@ -100,6 +108,13 @@
 
 
 
+<script>
+  layui.use('laydate', function() {
+        //执行一个laydate实例
+       
+    });
+
+</script>
 
 <script>
 import "../../common/js/layuiTime.js";
@@ -124,6 +139,7 @@ export default {
     }
   },
   methods: {
+
     //查询所有可以进行预出库的枪支
     getAppListPreselected(pn) {
       this.$axios.get("/appGun/readAppGunBinding?pn="+pn+"&type=1").then(response => {
@@ -145,7 +161,8 @@ export default {
     //枪支预出库
     distributionStorage(appId) {
       let _this=this;
-      if (!_this.returnTime) {
+      var time=_this.$refs.returnTime.value;
+      if (!time) {
         layer.msg("请选择截止时间",{time:1000});
       } else {
         _this.$axios
@@ -153,8 +170,7 @@ export default {
             "/wareHouseRecords/createDeviceBindingGunsBeforehandDelivery?appId=" +
               appId +
               "&type=7" +
-              "&endTime=" +
-              _this.returnTime
+              "&endTime=" +time
           )
           .then(response => {
           
@@ -243,6 +259,19 @@ export default {
   created() {
     this.getAppListPreselected(this.pn);
   },
+  mounted(){
+		layui.use('element', function(){
+      var element = layui.element
+      var laydate = layui.laydate;
+        //时间选择器
+      laydate.render({
+        elem: '#returnTime'
+        ,type: 'datetime'
+      });
+		})
+
+   
+	},
   computed: {
     indexs: function() {
       var left = 1;

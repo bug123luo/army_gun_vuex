@@ -55,7 +55,7 @@
                           <!--   <button type="button" class="btn btn-danger btn-sm" id="batchAllocation" disabled="disabled"  @click="">
                                         <i class="fa fa-trash-o"></i> 批量删除
                             </button> -->
-
+                          <div class="text-center"  v-show="total==0"> <span style="color:orange"> 暂无数据...... </span> </div>
                            <div class="text-center" v-show="total>pageSize">
                                 <div class="row">
                                     <!-- 分页显示 -->

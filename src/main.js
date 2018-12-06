@@ -20,9 +20,11 @@ Vue.use(VueRouter)
 //使用Axios
 Vue.prototype.$axios = axios
 
-axios.defaults.baseURL = 'http://127.0.0.1:8888';
+//axios.defaults.baseURL = 'http://127.0.0.1:8888/gun';
+//axios.defaults.baseURL = 'http://132.232.32.227:8888/gun';
+axios.defaults.baseURL = 'http://120.76.156.120:8888/gun';
 //axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF- 8';// 配置请求头
-axios.defaults.timeout = 50000;
+axios.defaults.timeout = 10000;
 axios.defaults.withCredentials = true; // 让ajax携带cookie
 
 
@@ -36,6 +38,7 @@ axios.interceptors.request.use(
     return config;
   },
   err => {
+    layer.msg("请求超时!")
     return Promise.reject(err);
   });
 // http response 服务器响应拦截器，这里拦截401错误，并重新跳入登页重新获取token
@@ -46,7 +49,7 @@ axios.interceptors.response.use(
   error => {
     //alert(error)
     if (error =="Error: Network Error"){
-      layer.msg("网址维护中......");
+      layer.msg("服务器被吃了⊙﹏⊙∥");
       next("/login")
     } 
     if (error.response) {
@@ -56,7 +59,13 @@ axios.interceptors.response.use(
           router.replace({
             path: '/login',
             query: { redirect: router.currentRoute.fullPath }//登录成功后跳入浏览的当前页面
-          })
+          });
+        case 504:
+          layer.msg("服务器被吃了⊙﹏⊙∥");
+        case 403:
+          layer.msg("权限不足,请联系管理员!");
+         default:
+          layer.msg("未知错误!"); 
       }
     }
     return Promise.reject(error.response)

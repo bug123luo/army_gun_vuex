@@ -13,6 +13,7 @@ module.exports = {
     proxyTable: {
       '/api': {  //使用"/api"来代替"http://f.apiplus.c" 
         target: 'http://127.0.0.1:8888', //源地址 
+        //target: 'http://132.232.32.227:8888', //源地址 
         changeOrigin: true, //改变源 
         pathRewrite: {
           '^/api': '/' //这里理解成用‘/api’代替target里面的地址，组件中我们调接口时直接用/api代替
@@ -52,13 +53,13 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: './',
 
     /**
      * Source Maps
      */
 
-    productionSourceMap: true,
+    productionSourceMap: false,//打包上线修改为false
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',
 
