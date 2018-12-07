@@ -142,7 +142,7 @@ export default {
 
     //查询所有可以进行预出库的枪支
     getAppListPreselected(pn) {
-      this.$axios.get("/appGun/readAppGunBinding?pn="+pn+"&type=1").then(response => {
+      this.$axios.get("/appGun/readAppGunBinding?pn="+pn+"&type=2").then(response => {
         console.log(response.data.extend.pageInfo.list);
         this.appListPreselected = response.data.extend.pageInfo.list;
         var listPage = response.data.extend.pageInfo;

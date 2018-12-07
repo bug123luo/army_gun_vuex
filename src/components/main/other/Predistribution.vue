@@ -34,10 +34,10 @@
 												<td class="text-center">{{appsP.appName}}</td>
 												<td class="text-center">{{appsP.counts}}</td>
 												<td class="text-center">
-                                                    <!-- Button trigger modal -->
-                                                    <button type="button" class="btn btn-primary btn-sm"  v-on:click="distributionStorage(appsP.appId)">
-                                                        预出库
-                                                    </button>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary btn-sm"  v-on:click="distributionStorage(appsP.appId)">
+                            预出库
+                        </button>
 												</td>
 											</tr>
 										</tbody>

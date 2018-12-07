@@ -78,7 +78,10 @@
                               <li v-if="cur!=all"><a v-on:click="cur++,pageClick()">></a></li>
                               <li v-if="cur == all"><a class="banclick">></a></li>
                               <li v-if="cur!=all"><a v-on:click="cur=all,pageClick()">尾页</a></li>
+                              <li><a>到第<i>{{cur}}</i>页</a></li>
                               <li><a>共<i>{{all}}</i>页</a></li>
+                              <li><a>共<i>{{total}}</i>条</a></li>
+                              <li><a><i>{{pageSize}}</i>条/页</a></li>
                           </ul>
                         </div>
                       </div>

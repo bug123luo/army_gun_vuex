@@ -64,8 +64,8 @@ axios.interceptors.response.use(
           layer.msg("服务器被吃了⊙﹏⊙∥");
         case 403:
           layer.msg("权限不足,请联系管理员!");
-         default:
-          layer.msg("未知错误!"); 
+        default:
+          //layer.msg("未知错误!");  
       }
     }
     return Promise.reject(error.response)

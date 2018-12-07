@@ -6,11 +6,14 @@
 				<a href="index.html"><img src="assets/img/logo-dark.png" alt="Klorofil Logo" class="img-responsive logo"></a>
 			</div> -->
 			<div class="container-fluid">
+        <div  style="float:left; margin-top:16px; font-size:20px; margin-left:30px; margin-right:80px;">
+          枪支定位管理
+        </div>
 				<div class="navbar-btn">
 					<button type="button" class="btn-toggle-fullwidth"><i class="lnr lnr-arrow-left-circle"></i></button>
 				</div>
-        <div class="navbar-btn">
-					<button type="button" class="btn-toggle-fullwidth" @click="loginOut">退出</button>
+        <div class="navbar-btn" style="float:right; margin-top:20px; margin-right:10px; ">
+					<button type="button"  @click="loginOut">退出</button>
 				</div>
 			</div>
 		</nav>
