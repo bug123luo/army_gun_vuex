@@ -4,7 +4,7 @@
         <!-- MAIN CONTENT -->
 			<div class="main-content">
 				<div class="container-fluid">
-					<h3 class="page-title">{{ $route.name}}</h3>
+				<!-- 	<h3 class="page-title"></h3> -->
 					<div class="row">
 						<!-- INPUT SIZING -->
 							<div class="panel">
@@ -52,7 +52,7 @@
 							<!-- TASKS -->
 							<div class="panel">
 								<div class="panel-heading">
-									<h3 class="panel-title">枪支列表</h3>
+									<h3 class="panel-title">{{$route.name}}</h3>
 									<div class="right">
 										<button type="button" class="btn-toggle-collapse"><i class="lnr lnr-chevron-up"></i></button>
 										<button type="button" class="btn-remove"><i class="lnr lnr-cross"></i></button>

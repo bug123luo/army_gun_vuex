@@ -60,12 +60,12 @@ axios.interceptors.response.use(
             path: '/login',
             query: { redirect: router.currentRoute.fullPath }//登录成功后跳入浏览的当前页面
           });
-        case 504:
+     /*    case 504:
           layer.msg("服务器被吃了⊙﹏⊙∥");
         case 403:
           layer.msg("权限不足,请联系管理员!");
         default:
-          //layer.msg("未知错误!");  
+          layer.msg("未知错误!");   */
       }
     }
     return Promise.reject(error.response)

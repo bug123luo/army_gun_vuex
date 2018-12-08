@@ -37,7 +37,7 @@
 
         </div>
 
-        <div   class="state" style="width:280px; height:60px ;position:absolute; z-index:999999; right:80px; top:100px; ">
+        <div   class="state" style="width:100px; height:60px ;position:absolute; z-index:999999; right:160px; top:100px;">
           <div @mouseover="hover(true)" @mousedown="hover(false)" style=" font-size:18px; text-align:center; margin-top:16px;  margin-left:-100px;">附近警员</div>
         </div>  
 

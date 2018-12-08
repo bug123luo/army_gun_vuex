@@ -70,7 +70,9 @@
 </template>
 
 <script>
-
+/* 
+import {stomp} from "../common/mqtt/mqttws31.js";
+import {customer} from  "../common/mqtt/mqttTopic.js"; */
 export default {
   name: "LeftSidebar",
   data() {
@@ -79,6 +81,12 @@ export default {
     };
   },
   methods: {
+   /*  stomps(){
+      stomp();
+    },
+    customers(){
+      customer();
+    }, */
     loginOut() {
       let _this = this;
       //询问框
@@ -114,6 +122,53 @@ export default {
         }
       );
     },
+    acceptMqtt(){
+      var mqtt;
+      var reconnectTimeout = 2000;
+      var host = "120.76.156.120";
+      var port = 61614;
+      var topic = "TestTopic";
+      var subscribeOptions = { qos: 2 };
+
+      function onFailure(message) {
+          alert("失败");
+          console.log("Connection Attempt to Host " + host + " Failed");
+          setTimeout(MQTTconnect, reconnectTimeout);
+      }
+
+      function onMessageArrived(msg) {
+          alert("发送消息：" + msg.payloadString + "===" + msg.destinationName)
+          out_msg = "Message received " + msg.payloadString + "<br>";
+          out_msg = out_msg + " Message received Topic " + msg.destinationName;
+          console.log(out_msg);
+      }
+
+      function onConnect() {
+          alert("连接成功")
+          console.log("Connected");
+          message = new Paho.MQTT.Message("HelloWorld");
+          message.destinationName = "TestTopic";
+          //mqtt.send(message);
+          mqtt.subscribe(topic, subscribeOptions);
+      }
+
+     // function MQTTconnect() {
+          alert("mqttttt")
+          console.log("connecting to " + host + " " + port);
+          mqtt = new Paho.MQTT.Client(host, port, "clientjs");
+
+          var options = {
+              timeout: 3,
+              onSuccess: onConnect,
+              onFailure: onFailure,
+              cleanSession: false,
+          };
+
+          mqtt.onMessageArrived = onMessageArrived
+
+          mqtt.connect(options);
+      //}
+    },
     //渲染菜单列表
     getMenu(){
        let userInfo=JSON.parse(this.$store.state.userInfo);
@@ -127,11 +182,12 @@ export default {
     }
   },
   created() {
-    if (this.$store.state.userRefrsh) {
+    var _this=this;
+    if (_this.$store.state.userRefrsh) {
       history.go(0);
       _this.$store.commit("SAVE_REFRESH", false);
     }
-    this.getMenu();
+    _this.getMenu();
   }
 };
 </script>

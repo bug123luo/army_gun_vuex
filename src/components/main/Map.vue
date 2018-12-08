@@ -36,10 +36,11 @@
         <button
           type="button"
           id="close2"
-          style="color: #ffffff"
+          style="color: #000;position:absolute; margin-top:-26px; right:20px;"
           class="close"
           data-dismiss="model"
           aria-hidden="true"
+          
         >&times</button>
         <!-- <h4 class="modal-title text-center" style="color:rgba(255,255,255,1); margin-top: 10px;margin-bottom:20px;">
         枪支离位列表</h4>-->
@@ -68,9 +69,8 @@
           </tr>
         </tbody>
       </table>
-       <div class="text-center" v-show="total>pageSize">
+       <!-- <div class="text-center" v-show="total>pageSize">
                       <div class="row">
-                        <!-- 分页显示 -->
                         <div class="page-bar" style=" margin:0 auto; margin-left:20%;">
                           <ul>
                               <li v-if="cur>1"><a v-on:click="cur=1,pageClick()">首页</a></li>
@@ -86,7 +86,7 @@
                           </ul>
                         </div>
                       </div>
-                    </div>
+                    </div> -->
     </div>
   </div>
 </template>
@@ -194,6 +194,7 @@ export default {
     //地图动态数据展示
     findMap(map) {
       let _this = this;
+      
       //启动定时
       if(_this.setState){
        // alert("开启"+_this.setState)
@@ -220,6 +221,7 @@ export default {
       _this.$axios
         .get("/gunLocation/readGunDynamicOptimize")
         .then(response => {
+          _this.map.clearOverlays(); // 清除标注信息
           //console.log("你是不");
           //console.log(response.data.extend.gunLocations);
           _this.gunLocationList = response.data.extend.gunLocations;
@@ -229,7 +231,7 @@ export default {
             getLatitude[i] = p.latitude;
             //alert(p.realTimeState)
             /* Start  枪支图片 */
-            if(p.realTimeState==0){
+            if(p.realTimeState==1){
                myIcon = new BMap.Icon("/static/assets/img/normalGun.png",new BMap.Size(68, 75)); //手枪
             }else{
                myIcon = new BMap.Icon("/static/assets/img/offNormalGun.png",new BMap.Size(68, 75)); //手枪
@@ -378,9 +380,9 @@ export default {
     },
     //扩大具体位置
     findLocation(gunId) {
-      alert(gunId)
+      //alert(gunId)
       let _this = this;
-     _this.map.clearOverlays(); // 清除标注信息
+      _this.map.clearOverlays(); // 清除标注信息
       _this.setState=true;
       var getLongitude = [];
       var getLatitude = [];
@@ -402,7 +404,7 @@ export default {
             getLongitude[i] = p.longitude;
             getLatitude[i] = p.latitude;
             /* Start  枪支图片 */
-            if(p.realTimeState==0){
+            if(p.realTimeState==1){
                myIcon = new BMap.Icon("/static/assets/img/normalGun.png",new BMap.Size(68, 75)); //手枪
             }else{
                myIcon = new BMap.Icon("/static/assets/img/offNormalGun.png",new BMap.Size(68, 75)); //手枪
@@ -520,6 +522,7 @@ export default {
     },
     //查询轨迹
     findTrajectory(appImei) {
+       //alert(appImei);
         let _this=this;
         _this.map.clearOverlays(); // 清除标注信息
         _this.setState=true;
@@ -538,7 +541,11 @@ export default {
         var myIcon;//图标点
         _this.$axios.get('/gunLocation/readGunTrajectory?appImei='+appImei).then(response=>{
                 var result=response.data;
-
+                console.log(result);
+                if(result.extend.gunTrajectoryList.length==0){
+                  layer.msg("暂无实时轨迹");
+                  return false;
+                }
                 $.each(result.extend.gunTrajectoryList,function (i,p) {
                     label[i] = p.longitude;
                     value[i] = p.latitude;
@@ -667,14 +674,16 @@ export default {
    },
    //枪支列表
    getReadGunDynamicList(pn){
+   // alert(123123)
       let _this=this;
-      _this.$axios.get('/gunLocation/readGunDynamicList?pn='+pn).then(response=>{
-        _this.readGunDynamicList=response.data.extend.pageInfo.list;
-        var listPage = response.data.extend.pageInfo;
+      _this.$axios.get('/gunLocation/readGunDynamicOptimize?pn='+pn).then(response=>{
+        console.log(response.data)
+        _this.readGunDynamicList=response.data.extend.gunLocations/* .pageInfo.list */;
+       /*  var listPage = response.data.extend.pageInfo;
         _this.all = listPage.pages; //总页数
         _this.cur = listPage.pageNum; //当前页码
         _this.total = listPage.total;
-        _this.pageSize = listPage.pageSize;
+        _this.pageSize = listPage.pageSize; */
       })
    },
     //分页
@@ -739,10 +748,12 @@ export default {
 <style>
 @import "../common/css/tag.css"; /*引入公共样式*/
 @import "../common/css/paging.css"; /*引入公共样式*/
-#allmap {
-  height: 580px;
+
+ #allmap {
+  width: 100%;
+  height: 600px;
   overflow: hidden;
-}
+ }
 
 .BMap_cpyCtrl {
   display: none;
