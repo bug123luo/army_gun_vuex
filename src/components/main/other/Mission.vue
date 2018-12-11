@@ -24,8 +24,8 @@
                                         <th class="text-center">丟失枪支</th>
                                         <th class="text-center">协助设备</th>
                                         <th class="text-center">任务类型</th>
-                                        <th class="text-center">处理状态</th>
                                         <th class="text-center">创建时间</th>
+                                        <th class="text-center">处理状态</th>
                                         <th class="text-center">操作</th>
                                     </tr>
                                 </thead>
@@ -34,9 +34,24 @@
                                         <td><input type="checkbox" class="gIdcheckItem" v-bind:value="mission.id" v-model="checkDataIds"> </td>                                 
                                         <td class="text-center">{{mission.appImei}}</td>
                                         <td class="text-center">{{mission.gunMac}}</td>
-                                        <td class="text-center">{{mission.type}}</td>
-                                        <td class="text-center">{{mission.state}}</td>
+                                        <td class="text-center" v-if="mission.type=='协助查找'" style="color:orange">
+                                          {{mission.type}}
+                                        </td>
+                                        <td class="text-center" v-else style="color:red">
+                                          {{mission.type}}
+                                        </td>
                                         <td class="text-center">{{mission.createTime | formatDate}}</td>
+
+                                        <td class="text-center" v-if="mission.state=='已处理'">
+                                          {{mission.state}}
+                                        </td>
+                                        <td class="text-center" v-else-if="mission.state=='未处理'" style="color:red">
+                                          {{mission.state}}
+                                        </td>
+                                         <td class="text-center" v-else style="color:blue">
+                                          {{mission.state}}
+                                        </td>
+
                                         <td class="text-center">
                                                 <!-- Button trigger modal -->
                                                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal" v-on:click="getRestartMission(0,mission.appImei)">
@@ -158,8 +173,13 @@ export default {
      //查询枪支列表
     getMissionLists(pn) {
       this.$axios.get("/mission/readMission?pn=" + pn).then(response => {
-        console.log(response.data);
+        //console.log(response.data);
         this.missionList = response.data.extend.pageInfo.list;
+         for (const key in  this.missionList) {
+          this.missionList[key].type=(this.missionList[key].type)==0?"协助查找":"紧急支援";
+          this.missionList[key].state=(this.missionList[key].state)==0?"已处理":(this.missionList[key].state)==1?"处理中...":"未处理";
+        }
+
         var listPage = response.data.extend.pageInfo;
         this.all = listPage.pages; //总页数
         this.cur = listPage.pageNum; //当前页码

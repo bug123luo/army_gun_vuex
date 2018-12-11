@@ -3,90 +3,94 @@
   <div id="map">
     <div id="allmap" ref="allmap"></div>
 
-    <div  
-      class="state"
-      style="width:420px; height:60px; background-color:rgba(255,255,255); position:absolute; z-index:99999; box-shadow:0px 0px 4px #cdcdcd; right:10px; top:100px; border-radius:4px;"
-    >
-      <div style="margin-top:16px; margin-left:20px; float:left;">
-        <img src="static/assets/img/fanhui.png">
-      </div>
-      <div
-        style="width:1px; height:40px; background-color:#dddddd; float:left; margin-left:20px; margin-top:10px;"
-      ></div>
-      <!--  <button v-if="type=='2'" type="button" @click="pushToAssist(0)" class="btn btn-primary" style="float:right; margin-right:20px; margin-top:12px;">一键协助查找</button>
-      <button v-if="type=='3'" type="button" @click="pushToAssist(1)" class="btn btn-primary" style="float:right; margin-right:20px; margin-top:12px;">一键紧急支援</button>-->
+
+<!-- @mousedown="hover(false)"  -->
+<div class="news" id="news" style="	width: 400px;height: 60px;background-color:rgba(0,0,0,0.75);position: absolute;z-index: 99999;right:10px;top:100px;border:1px solid rgba(255,255,255,0.70)">
+    <div  @mouseover="hoverApp(true)"   class="dislocation" style="margin-top:10px;float:left; padding-left:40px;">
+        <img src="static/assets/img/suixing.png" style="float:left;">
+        <dl style="color:#2db5ee; float:left; margin-left:10px; margin-top:-2px; padding-right:50px; border-right:1px solid rgba(255,255,255,0.70)">
+            <dd style="font-size:14px;"><span id="dislocation" style="font-size:16px">{{readOnLineAppCount}}</span>个</dd>
+            <dd style="font-size:14px;">在线设备数</dd>
+        </dl>
     </div>
 
-    <div
-      class="state"
-      style="width:280px; height:60px ;position:absolute; z-index:999999; right:80px; top:100px; "
-    >
-      <div @mouseover="hover(true)" @mousedown="hover(false)"  style=" font-size:18px; text-align:center; margin-top:16px;  margin-left:-100px;">在线警员</div>
+    <div  @mouseover="hoverGun(true)"   class="offline" style="margin-top:10px;float:left; padding-left:50px;">
+        <img src="static/assets/img/lixian.png" style="float:left;">
+        <dl style="color:#fa117a; float:left; margin-left:10px; margin-top:-2px;">
+            <dd style="font-size:14px;"><span id="offline" style="font-size:16px">{{readOffNormalGunCount}}</span>个</dd>
+            <dd style="font-size:14px;">枪支离位数</dd>
+        </dl>
     </div>
+</div>
 
-    <div v-show="state"
-      class="state"
-      style="width:420px; height:300px; background-color:rgba(255,255,255); position:absolute; z-index:99999; box-shadow:0px 0px 4px #cdcdcd; right:10px; top:166px; border-radius:4px;"
-    >
-      <table
-        class="table table-condensed"
-        id="gunTag_OffNormal_table"
-        style="width:400px; margin-left:10px; margin-top:10px;"
-      >
-        <button
-          type="button"
-          id="close2"
-          style="color: #000;position:absolute; margin-top:-26px; right:20px;"
-          class="close"
-          data-dismiss="model"
-          aria-hidden="true"
-          
-        >&times</button>
-        <!-- <h4 class="modal-title text-center" style="color:rgba(255,255,255,1); margin-top: 10px;margin-bottom:20px;">
-        枪支离位列表</h4>-->
+
+<!--在线设备-->
+
+  <div v-show="stateApp || total_d>pageSize_d" class="state" style="width:400px; height:300px; background-color:rgba(0,0,0,0.75); position:absolute; z-index:99999; right:10px; top:166px;border:1px solid rgba(255,255,255,0.70);">
+      <table class="table table-condensed" >
         <thead>
-          <tr style="color:#4d4d4d; font-size:14PX; background-color:#fff;">
+          <tr style="color:#e5e5e5; font-size:14PX; background-color:rgba(36,36,36,0.9); ">
+            <th class="text-center">设备名</th>
             <th class="text-center">枪号</th>
-            <th class="text-center">IMEI</th>
-            <th class="text-center">状态</th>
             <th class="text-center">操作</th>
-            <!--<th class="text-center">状态</th>-->
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="gunLocation in readGunDynamicList"
-            :key="gunLocation.id"
-            style="color:#4d4d4d; text-align:center; font-size:14PX; background-color:#fff;"
-          >
-            <td>{{gunLocation.gunId}}</td>
-            <td>{{gunLocation.appIMEI}}</td>
-            <td>{{gunLocation.gunDeviceState}}</td>
+          <button
+          type="button"
+          id="close2"
+          style="color:#fff; position:absolute; margin-top:-28px; right:10px;"
+          class="close"
+          data-dismiss="model"  @click="close(1)"
+          aria-hidden="true">&times
+          </button>
+          <tr v-for="onLineApp in readOnLineAppList"
+              :key="onLineApp.id" style="color:#e5e5e5; text-align:center; font-size:14PX; background-color:rgba(46,46,46,0.9);">
+            <td>{{onLineApp.apps.appName}}</td>
+            <td>{{onLineApp.gunId}}</td>
             <td>
-              <span @click="findLocation(gunLocation.gunMac)" class="label label-success">查询</span>
-              <span @click="findTrajectory(gunLocation.gunMac)" class="label label-primary">轨迹</span>
+              <span @click="findLocation(onLineApp.apps.appImei)" class="label label-success">查询</span>
+              <span @click="openFindTrajectory(onLineApp.apps.appImei)" class="label label-primary">轨迹</span>
             </td>
           </tr>
         </tbody>
       </table>
-       <!-- <div class="text-center" v-show="total>pageSize">
-                      <div class="row">
-                        <div class="page-bar" style=" margin:0 auto; margin-left:20%;">
-                          <ul>
-                              <li v-if="cur>1"><a v-on:click="cur=1,pageClick()">首页</a></li>
-                              <li v-if="cur>1"><a v-on:click="cur--,pageClick()"><</a></li>
-                              <li v-if="cur==1"><a class="banclick"><</a></li>
-                              <li v-for="index in indexs"  v-bind:class="{ 'active': cur == index}">
-                                  <a v-on:click="btnClick(index)">{{ index }}</a>
-                              </li>
-                              <li v-if="cur!=all"><a v-on:click="cur++,pageClick()">></a></li>
-                              <li v-if="cur == all"><a class="banclick">></a></li>
-                              <li v-if="cur!=all"><a v-on:click="cur=all,pageClick()">尾页</a></li>
-                              <li><a>共<i>{{total}}</i>条</a></li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div> -->
+</div>  
+
+<!--离位枪支--> 
+<div v-show="stateGun || total_g>pageSize_g" class="state" style="width:400px; height:300px; background-color:rgba(0,0,0,0.75); position:absolute; z-index:99999; right:10px; top:166px;border:1px solid rgba(255,255,255,0.70);">
+      <table class="table table-condensed" >
+        <thead>
+          <tr style="color:#e5e5e5; font-size:14PX; background-color:rgba(36,36,36,0.9); ">
+            <th class="text-center">枪号</th>
+            <th class="text-center">设备名</th>
+            <th class="text-center">类型</th>
+            <th class="text-center">操作</th> 
+            <!--<th class="text-center">状态</th>-->
+          </tr>
+        </thead>
+        <tbody>
+          <button
+          type="button"
+          id="close2"
+          style="color:#fff; position:absolute; margin-top:-28px; right:10px;"
+          class="close"
+          data-dismiss="model" @click="close(2)"
+          aria-hidden="true">&times
+          </button>
+          <tr v-for="offNormalGun in readOffNormalGunList"
+              :key="offNormalGun.id" style="color:#e5e5e5; text-align:center; font-size:14PX; background-color:rgba(46,46,46,0.9);">
+            <td>{{offNormalGun.gunId}}</td>
+            <td>{{offNormalGun.apps.appName}}</td>
+            <td>{{offNormalGun.guns.gunType}}</td>
+            <td>
+              <span @click="findLocation(offNormalGun.guns.gunImei)" class="label label-success">查询</span>
+              <span @click="openFindTrajectory(offNormalGun.guns.gunImei)" class="label label-primary">轨迹</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+</div>
     </div>
   </div>
 </template>
@@ -96,22 +100,33 @@ export default {
   name: "Map",
   data() {
     return {
-      setState:false,//定时状态
-      state:false,
+      setState:true,//定时状态
+      setStateGunApp:true,
+      stateGun:false,
+      stateApp:true,
       gunLocationList: [],
       readGunDynamicList:[],
-      //离位虚线
-      lineoff:
-        "<div style='height: 1px;border-bottom: 1px dashed rgba(255,255,255,0.5); width:128px; margin-bottom: -18px; margin-top: 2px;'></div>",
-      //正常虚线
-      lineon:
-        "<div style='height: 1px;border-bottom: 1px dashed rgba(14,11,12,0.2); width:128px; margin-bottom: -18px; margin-top: 2px;'></div>",
+      toggole:true,//开关轨迹
       map: "",
-      pn: 1,
-      all: "", //总页数
-      cur: "", //当前页码
-      total: "", //总条数
-      pageSize: "" //多少一页
+      //离位枪支数
+      readOffNormalGunCount:"",
+      //在线设备数
+      readOnLineAppCount:"",
+      //离位枪支
+      readOffNormalGunList:[],
+      pn_g: 1,
+      all_g: "", //总页数
+      cur_g: "", //当前页码
+      total_g: "", //总条数
+      pageSize_g: "", //多少一页
+      //在线设备
+      readOnLineAppList:[],
+      pn_d: 1,
+      all_d: "", //总页数
+      cur_d: "", //当前页码
+      total_d: "", //总条数
+      pageSize_d: "" //多少一页
+
     };
   },
   methods: {
@@ -189,12 +204,28 @@ export default {
       //地图动态数据展示
       _this.findMap(_this.map);
     },
-
+    //开启
+    openFindMap(map){
+      
+      let _this=this;
+       var ka;
+      if(setState==false){
+         //alert("结束"+_this.setState)
+        //关闭定时
+        clearTimeout(()=>{ka});
+      }else if(setState==true){
+        //alert("开启"+_this.setState)
+        ka=setTimeout(() => {
+                _this.findMap(map);
+            }, 1000); 
+      }
+    },
    //===============================================  Start 动态数据 ==================================================
     //地图动态数据展示
     findMap(map) {
-      let _this = this;
       
+      let _this = this;
+ 
       //启动定时
       if(_this.setState){
        // alert("开启"+_this.setState)
@@ -206,7 +237,7 @@ export default {
         //关闭定时
         clearTimeout(()=>{_this.findMap(map)});
       }
-        
+
       var getLongitude = [];
       var getLatitude = [];
       //图标
@@ -219,7 +250,7 @@ export default {
         "<div style='height: 1px;border-bottom: 1px dashed rgba(14,11,12,0.2); width:128px; margin-bottom: -18px; margin-top: 2px;'></div>";
       //获取枪支动态数据
       _this.$axios
-        .get("/gunLocation/readGunDynamicOptimize")
+        .get("/gunLocation/readAppAndGunLocation")
         .then(response => {
           _this.map.clearOverlays(); // 清除标注信息
           //console.log("你是不");
@@ -231,8 +262,8 @@ export default {
             getLatitude[i] = p.latitude;
             //alert(p.realTimeState)
             /* Start  枪支图片 */
-            if(p.realTimeState==1){
-               myIcon = new BMap.Icon("/static/assets/img/normalGun.png",new BMap.Size(68, 75)); //手枪
+            if(p.typeImei==0){
+               myIcon = new BMap.Icon("/static/assets/img/device.png",new BMap.Size(68, 75)); //手枪
             }else{
                myIcon = new BMap.Icon("/static/assets/img/offNormalGun.png",new BMap.Size(68, 75)); //手枪
             }
@@ -254,7 +285,7 @@ export default {
             function AddClickHandler(marker) {
               marker.addEventListener("click", function(e) {
                 //alert(p.gunMac)
-                _this.findLocation(p.gunMac);
+                _this.findLocation(p.imei);
                 //getGunLocationClick(p.gunMac);
               });
             }
@@ -288,23 +319,49 @@ export default {
 
             /* Start 框里面的内容 */
             var tag;
-            tag =
+            if(p.typeImei==0){//在线设备
+            //var guns=p.gunIds.split(',');
+            //alert(p.gunIds)
+           /*  var gs="";
+            for (let index = 0; index < guns.length-3; index++) {
+              gs+="枪号：" + guns[index] +"</br>";
+            } */
+              tag =
               "<div class='tag2' style='padding-left:10px;padding-top:6px;line-height:20px;width:150px; height:133px; border:1px solid #f8b400; position:relative; border-radius:8px; background-color:#f8b400;'>" +
-              "IMIE：" +
-              p.appIMEI +
+              "设备名：" +
+              p.appName +
               lineoff +
               "</br>" +
               "电话：" +
               p.appPhone +
               lineoff +
               "</br>" +
-              // + "枪支：" + (p.gunModel).slice(0, 8) + lineoff + "</br>"
+             // gs+lineoff+"</br>" +
+              /*  + ((p.gunState) == 0 ? accompany : (p.gunState) == 1 ? gunOffNormal : gunOffNormal)
+                + ((p.deviceState) == 0 ? onLine : (p.deviceState) == 1 ? gunOffNormal : (p.deviceState) == 2 ? offLine : assist) + "</br>"  */ "</div>";
+            }else{
+              //离位枪支
+              tag =
+              "<div class='tag2' style='padding-left:10px;padding-top:6px;line-height:20px;width:150px; height:133px; border:1px solid #f8b400; position:relative; border-radius:8px; background-color:#f8b400;'>" +
               "枪号：" +
               p.gunId +
               lineoff +
               "</br>" +
-              /*  + ((p.gunState) == 0 ? accompany : (p.gunState) == 1 ? gunOffNormal : gunOffNormal)
-                + ((p.deviceState) == 0 ? onLine : (p.deviceState) == 1 ? gunOffNormal : (p.deviceState) == 2 ? offLine : assist) + "</br>"  */ "</div>";
+              "设备名：" +
+              p.appName +
+              lineoff +
+              "</br>" +
+               "类型：" +
+              (p.gunType==0?"长枪":"短枪") +
+              lineoff +
+              "</br>" +
+            /*    "型号：" +
+              p.gunModel +
+              lineoff +
+              "</br>" + */
+               "</div>";
+            }
+            
             /* End 框里面的内容 */
 
             /* Start 鼠标触摸事件 */
@@ -379,11 +436,11 @@ export default {
         });
     },
     //扩大具体位置
-    findLocation(gunId) {
+    findLocation(imei) {
       //alert(gunId)
       let _this = this;
       _this.map.clearOverlays(); // 清除标注信息
-      _this.setState=true;
+     // _this.setState=true;
       var getLongitude = [];
       var getLatitude = [];
       //图标
@@ -396,7 +453,7 @@ export default {
         "<div style='height: 1px;border-bottom: 1px dashed rgba(14,11,12,0.2); width:128px; margin-bottom: -18px; margin-top: 2px;'></div>";
       //获取枪支动态数据
       _this.$axios
-        .get("/gunLocation/readGunDynamicOptimize?gunId=" + gunId)
+        .get("/gunLocation/readAppAndGunLocation?imei=" + imei)
         .then(response => {
           var result = response.data;
           //遍历
@@ -404,8 +461,8 @@ export default {
             getLongitude[i] = p.longitude;
             getLatitude[i] = p.latitude;
             /* Start  枪支图片 */
-            if(p.realTimeState==1){
-               myIcon = new BMap.Icon("/static/assets/img/normalGun.png",new BMap.Size(68, 75)); //手枪
+             if(p.typeImei==0){
+               myIcon = new BMap.Icon("/static/assets/img/device.png",new BMap.Size(68, 75)); //手枪
             }else{
                myIcon = new BMap.Icon("/static/assets/img/offNormalGun.png",new BMap.Size(68, 75)); //手枪
             }
@@ -465,10 +522,10 @@ export default {
               p.appIMEI +
               lineoff +
               "</br>" +
-              "电话：" +
+             /*  "电话：" +
               p.appPhone +
               lineoff +
-              "</br>" +
+              "</br>" + */
               //+ "枪支：" + (p.gunModel).slice(0, 8) + lineoff + "</br>"
               "枪号：" +
               p.gunId +
@@ -496,9 +553,9 @@ export default {
                 height: "100%",
                 fontSize: "14px"
               });
-              marker.setLabel(labela);
+              //marker.setLabel(labela);触摸弹出
             });
-            marker.addEventListener("mouseout", function(e) {
+            /* marker.addEventListener("mouseout", function(e) {
               var label = this.getLabel();
               setTimeout(function() {
                 label.setContent(""); //设置标签内容为空
@@ -508,7 +565,7 @@ export default {
                   padding: "0px"
                 }); //设置标签边框宽度为0
               }, 1000);
-            });
+            }); */
             /* End 鼠标触摸事件 */
 
             //7.4 将经纬坐标划入地图
@@ -520,20 +577,29 @@ export default {
           console.log(error);
         });
     },
+    //轨迹开启和关闭
+    openFindTrajectory(appImei){
+      let _this=this;
+       if (_this.toggole) {
+         alert("轨迹：开启")
+        //查询轨迹
+        _this.findTrajectory(appImei) 
+        _this.setState=false
+        } else {
+           alert("轨迹：关闭")
+          //扩大显示
+          _this.setState=true
+          _this.findMap(_this.map)
+          _this.findLocation(appImei);
+        }
+        _this.toggole = !_this.toggole; 
+    },
     //查询轨迹
     findTrajectory(appImei) {
-       //alert(appImei);
+        //alert(appImei);
         let _this=this;
         _this.map.clearOverlays(); // 清除标注信息
-        _this.setState=true;
-/* 
-        if (_this.setState) {
-            return
-        } else {
-            deviceLocation2(deviceNoId);
-        }
-        _this.setState = !_this.setState;
- */
+ 
         var label = [];//保存日期
         var value = [];//数量
         var points = []; // 添加折线运动轨迹
@@ -542,10 +608,10 @@ export default {
         _this.$axios.get('/gunLocation/readGunTrajectory?appImei='+appImei).then(response=>{
                 var result=response.data;
                 console.log(result);
-                if(result.extend.gunTrajectoryList.length==0){
+              /*   if(result.extend.gunTrajectoryList.length==0){
                   layer.msg("暂无实时轨迹");
                   return false;
-                }
+                } */
                 $.each(result.extend.gunTrajectoryList,function (i,p) {
                     label[i] = p.longitude;
                     value[i] = p.latitude;
@@ -660,7 +726,7 @@ export default {
                 })
                 var polyline = new BMap.Polyline(points, {
                     strokeColor : "blue",
-                    strokeWeight : 5,
+                    strokeWeight : 2,
                     strokeOpacity : 1
                 });
                 _this.map.addOverlay(polyline);
@@ -669,61 +735,202 @@ export default {
         });
 
     },
-    hover:function (params) {
-     this.state=Boolean(params)
+    hoverApp:function (params) {
+     this.stateApp=Boolean(params)
+     this.stateGun=Boolean(!params)
+     this.getOnLineAppList(this.pn_d)
+     this.getOffNormalGunCount()
+     this.getOnLineAppCount()
+   },
+    hoverGun:function (params) {
+     this.stateGun=Boolean(params)
+     this.stateApp=Boolean(!params)
+     this.getOffNormalGunList(this.pn_g)
+      this.getOffNormalGunCount()
+     this.getOnLineAppCount()
+   },
+   close(state){
+     if(state==1){
+        this.stateApp=Boolean(false)
+     }else if(state==2){
+        this.stateGun=Boolean(false)
+     }
    },
    //枪支列表
    getReadGunDynamicList(pn){
    // alert(123123)
       let _this=this;
       _this.$axios.get('/gunLocation/readGunDynamicOptimize?pn='+pn).then(response=>{
-        console.log(response.data)
+        console.log(response.data.extend.gunLocations)
         _this.readGunDynamicList=response.data.extend.gunLocations/* .pageInfo.list */;
+        for (var js2 in _this.readGunDynamicList) {
+          _this.readGunDynamicList[js2].gunDeviceState=(_this.readGunDynamicList[js2].gunDeviceState)==0?"在线":"离位"
+         // alert(_this.readGunDynamicList[js2].gunDeviceState)
+          //alert( js2+"="+_this.readGunDynamicList[js2].gunId);
+        }
        /*  var listPage = response.data.extend.pageInfo;
         _this.all = listPage.pages; //总页数
         _this.cur = listPage.pageNum; //当前页码
         _this.total = listPage.total;
         _this.pageSize = listPage.pageSize; */
-      })
+      });
    },
+
+   //在线设备
+   getOnLineAppList(pn){
+      let _this=this;
+      _this.$axios.get('/appGun/readOnLineApp?pn='+pn).then(response=>{
+        // console.log("在线设备")
+        //console.log(response.data)
+        _this.readOnLineAppList=response.data.extend.pageInfo.list;
+       /*  for (var js2 in _this.readOnLineAppList) {
+          _this.readOnLineAppList[js2].gunDeviceState=(_this.readOnLineAppList[js2].gunDeviceState)==0?"在线":"离位"
+        } */
+        var listPage = response.data.extend.pageInfo;
+        _this.all_d = listPage.pages; //总页数
+        _this.cur_d = listPage.pageNum; //当前页码
+        _this.total_d = listPage.total;
+        _this.pageSize_d = listPage.pageSize; 
+      });
+   },
+    //离位枪支
+   getOffNormalGunList(pn){
+      let _this=this;
+      _this.$axios.get('/appGun/readOffNormalGun?pn='+pn).then(response=>{
+         //console.log("离位枪支")
+         //console.log(response.data)
+        _this.readOffNormalGunList=response.data.extend.pageInfo.list;
+         for (var js2 in _this.readOffNormalGunList) {
+          _this.readOffNormalGunList[js2].guns.gunType=(_this.readOffNormalGunList[js2].guns.gunType)==0?"长枪":"短枪"
+        } 
+        var listPage = response.data.extend.pageInfo;
+        _this.all_g = listPage.pages; //总页数
+        _this.cur_g = listPage.pageNum; //当前页码
+        _this.total_g = listPage.total;
+        _this.pageSize_g = listPage.pageSize; 
+      });
+   },
+
+   //离位枪支数
+   getOffNormalGunCount(){
+      let _this=this;
+      //启动定时
+       _this.$axios.get('/appGun/readOffNormalGunCount').then(response=>{
+          _this.readOffNormalGunCount=response.data.extend.gunCount;
+        });
+   },
+
+    //在线设备数
+   getOnLineAppCount(){
+      let _this=this;
+      _this.$axios.get('/appGun/readOnLineAppCount').then(response=>{
+          _this.readOnLineAppCount=response.data.extend.countApp;
+        });
+   },
+   appAndGun(){
+     let _this=this
+     //alert(_this.setStateGunApp)
+      var ka;
+      //启动定时
+      if(_this.setStateGunApp){
+        alert(_this.setStateGunApp)
+        ka=setTimeout(() => {
+              _this.getOnLineAppCount(),
+              _this.getOffNormalGunCount()
+            },1000); 
+      }else{
+        clearTimeout(()=>{ka});
+      }
+   },
+
+    //==========  在线设备
     //分页
-    btnClick: function(data) {
+    btnClick_d: function(data) {
       //页码点击事件
-      if (data != this.cur) {
-        (this.cur = data), this.getReadGunDynamicList(this.cur);
+      if (data != this.cur_d) {
+        (this.cur = data), this.getReadGunDynamicList(this.cu_d);
       }
     },
-    pageClick: function() {
-      this.getReadGunDynamicList(this.cur);
-      console.log("现在在" + this.cur + "页");
+    pageClick_d: function() {
+      this.getReadGunDynamicList(this.cur_d);
+      console.log("现在在" + this.cur_d + "页");
+    },
+
+     //==========  离位枪支
+    //分页
+    btnClick_g: function(data) {
+      //页码点击事件
+      if (data != this.cur_g) {
+        (this.cur = data), this.getReadGunDynamicList(this.cu_g);
+      }
+    },
+    pageClick_g: function() {
+      this.getReadGunDynamicList(this.cur_g);
+      console.log("现在在" + this.cur_g + "页");
     }
+
   },
   mounted() {
-      this.getMap()
+    let _this=this;
+    _this.getMap()
+    
   },
   created(){
       let _this=this
       _this.setState=true
       _this.getReadGunDynamicList(_this.pn)
+      _this.getOnLineAppList(_this.pn_d)
+      _this.getOnLineAppCount()
+      _this.getOffNormalGunCount()
+     // _this.appAndGun()
+     // _this.openFindMap(_this.map,_this.setState)
+      //_this.openFindMap(_this.map);
+      //_this.getOffNormalGunList(_this.pn_g)
+    
      // _this.findLocation(_this.map)
   },
   computed: {
-    indexs: function() {
+    indexs_d: function() {
       let _this=this;
       var left = 1;
-      var right = _this.all;
+      var right = _this.all_d;
       var ar = [];
-      if (_this.all >= 5) {
-        if (_this.cur > 3 && _this.cur < _this.all - 2) {
-          left = _this.cur - 2;
-          right = _this.cur + 2;
+      if (_this.all_d >= 5) {
+        if (_this.cur_d > 3 && _this.cur_d < _this.all_d - 2) {
+          left = _this.cur_d - 2;
+          right = _this.cur_d + 2;
         } else {
-          if (_this.cur <= 3) {
+          if (_this.cur_d <= 3) {
             left = 1;
             right = 5;
           } else {
-            right = _this.all;
-            left = _this.all - 4;
+            right = _this.all_d;
+            left = _this.all_d - 4;
+          }
+        }
+      }
+      while (left <= right) {
+        ar.push(left);
+        left++;
+      }
+      return ar;
+    },
+     indexs_g: function() {
+      let _this=this;
+      var left = 1;
+      var right = _this.all_g;
+      var ar = [];
+      if (_this.all_g >= 5) {
+        if (_this.cur_g > 3 && _this.cur_g < _this.all_g - 2) {
+          left = _this.cur_g - 2;
+          right = _this.cur_g + 2;
+        } else {
+          if (_this.cur_g <= 3) {
+            left = 1;
+            right = 5;
+          } else {
+            right = _this.all_g;
+            left = _this.all_g - 4;
           }
         }
       }
@@ -737,6 +944,7 @@ export default {
    beforeDestroy () {
        let _this=this;
        _this.setState=false
+       _this.setStateGunApp=false
     }, 
     //离开当前页面后执行
     /* destroyed: function () {

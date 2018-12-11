@@ -206,6 +206,9 @@ export default {
       this.$axios.get("/gun/readGunsNotPreselected?pn=" + pn).then(response => {
         //console.log(response.data.extend.pageInfo);
         this.gunListNotPreselected = response.data.extend.pageInfo.list;
+         for (const key in  this.gunListNotPreselected) {
+          this.gunListNotPreselected[key].gunType=(this.gunListNotPreselected[key].gunType)==0?"长枪":"短枪";
+        }
         var listPage = response.data.extend.pageInfo;
         this.all = listPage.pages; //总页数
         this.cur = listPage.pageNum; //当前页码

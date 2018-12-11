@@ -44,8 +44,8 @@
 												<td class="text-center">{{apps.appPhone}}</td>
 												<td class="text-center">{{apps.appType}}</td>
 												<td class="text-center">
-														<!-- Button trigger modal -->
-														<button type="button" class="btn btn-primary btn-sm" v-on:click="setUpParameters(apps.appImei)">
+														<!-- Button trigger modal  -->
+														<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModalParameter" v-on:click="setUpParametersS(apps.appImei)">
 															设置参数
 														</button>
 														<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#exampleModal" v-on:click="updateAppS(apps.id)">
@@ -259,6 +259,101 @@
 							</div>
 						</form>	
 				<!-- Modal -->
+
+
+			<!-- Add Gun Modal -->
+				 <form >
+							<div class="modal fade" id="exampleModalParameter" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title" id="exampleModalLabel">设置参数</h5>
+											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+										</div>
+										<div class="modal-body">
+											<form class="form-horizontal">
+												<div class="form-group form-group-sm">
+													<label class="col-sm-2 control-label" for="formGroupInputSmall">电量报警级别</label>
+													<div class="col-sm-6">
+														<input class="form-control" type="text" id="formGroupInputSmall"  onkeyup="this.value=this.value.replace(/[^-\d\.]/ig,'')" value="12"  ref="powerAlarmLevel">
+													</div>
+												</div>
+												<div class="form-group form-group-sm">
+													<label class="col-sm-2 control-label" for="formGroupInputSmall">发射功率</label>
+													<div class="col-sm-6">
+														<input class="form-control" type="text" id="formGroupInputSmall" onkeyup="this.value=this.value.replace(/[^-\d\.]/ig,'')" value="12"   ref="transmittingPower">
+													</div>
+												</div>
+												<div class="form-group form-group-sm">
+													<label class="col-sm-2 control-label" for="formGroupInputSmall">广播间隔</label>
+													<div class="col-sm-6">
+														<input class="form-control" type="text" id="formGroupInputSmall" onkeyup="this.value=this.value.replace(/[^-\d\.]/ig,'')" value="12"   ref="broadcastInterval">
+													</div>
+												</div>
+												<div class="form-group form-group-sm">
+													<label class="col-sm-2 control-label" for="formGroupInputSmall">连接间隔</label>
+													<div class="col-sm-6">
+														<input class="form-control" type="text" id="formGroupInputSmall" onkeyup="this.value=this.value.replace(/[^-\d\.]/ig,'')" value="12"  ref="connectionInterval">
+													</div>
+												</div>
+												<div class="form-group form-group-sm">
+													<label class="col-sm-2 control-label" for="formGroupInputSmall">连接超时</label>
+													<div class="col-sm-6">
+														<input class="form-control" type="text" id="formGroupInputSmall" onkeyup="this.value=this.value.replace(/[^-\d\.]/ig,'')" value="12"   ref="connectionTimeout">
+													</div>
+												</div>
+												<div class="form-group form-group-sm">
+													<label class="col-sm-2 control-label" for="formGroupInputSmall">软硬件版本</label>
+													<div class="col-sm-6">
+														<input class="form-control" type="text" id="formGroupInputSmall" onkeyup="this.value=this.value.replace(/[^-\d\.]/ig,'')" value="12"  ref="softwareDeviceVersion">
+													</div>
+												</div>
+                                                <div class="form-group form-group-sm">
+													<label class="col-sm-2 control-label" for="formGroupInputSmall">心跳间隔</label>
+													<div class="col-sm-6">
+														<input class="form-control" type="text" id="formGroupInputSmall" onkeyup="this.value=this.value.replace(/[^-\d\.]/ig,'')" value="12"  ref="heartbeat">
+													</div>
+												</div>
+                                                <div class="form-group form-group-sm">
+													<label class="col-sm-2 control-label" for="formGroupInputSmall">电量采样间隔</label>
+													<div class="col-sm-6">
+														<input class="form-control" type="text" id="formGroupInputSmall" onkeyup="this.value=this.value.replace(/[^-\d\.]/ig,'')" value="12"   ref="powerSampling">
+													</div>
+												</div>
+                         <div class="form-group form-group-sm">
+													<label class="col-sm-2 control-label" for="formGroupInputSmall">匹配最大时间</label>
+													<div class="col-sm-6">
+														<input class="form-control" type="text" id="formGroupInputSmall" onkeyup="this.value=this.value.replace(/[^-\d\.]/ig,'')" value="12"  placeholder="匹配最大时间" ref="matchTime">
+													</div>
+												</div>
+                         <div class="form-group form-group-sm">
+													<label class="col-sm-2 control-label" for="formGroupInputSmall">定位间隔</label>
+													<div class="col-sm-6">
+														<input class="form-control" type="text" id="formGroupInputSmall" onkeyup="this.value=this.value.replace(/[^-\d\.]/ig,'')" value="12"  ref="positioningInterval">
+													</div>
+												</div>
+                           <div class="form-group form-group-sm">
+													<label class="col-sm-2 control-label" for="formGroupInputSmall">安全字</label>
+													<div class="col-sm-6">
+														<input class="form-control" type="text" id="formGroupInputSmall" onkeyup="this.value=this.value.replace(/[^-\d\.]/ig,'')" value="12" ref="safeCode">
+													</div>
+												</div>
+
+                        
+											</form>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+											<button type="button" class="btn btn-primary"  v-on:click="setUpParameters()">推送设置</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>	
+				<!-- Modal -->
+
   </div>
 </template>
 
@@ -276,6 +371,7 @@ export default {
       headlineApp: "",
       isShow: false,
       isShowTime: false,
+      appImei:"",
       checkDataIds: [], //将多个选中的复选框，绑定到同个数组中
       pn: 1,
       all: "", //总页数
@@ -339,8 +435,11 @@ export default {
     //查询枪支列表
     getAppLists(pn) {
       this.$axios.get("/app/readAppList?pn=" + pn).then(response => {
-        //console.log(response.data);
+        //console.log(response.data.extend.pageInfo.list);
         this.appList = response.data.extend.pageInfo.list;
+        for (const key in  this.appList) {
+          this.appList[key].appType=(this.appList[key].appType)==0?"腕表":"手机";
+        }
         var listPage = response.data.extend.pageInfo;
         this.all = listPage.pages; //总页数
         this.cur = listPage.pageNum; //当前页码
@@ -587,20 +686,75 @@ export default {
       }
       e.preventDefault();
     },
+    setUpParametersS(appImei){
+      let _this=this;
+      this.reset_from("#exampleModalParameter form");
+      _this.appImei="",
+      _this.appImei=appImei;
+    },
     //设置参数
-    setUpParameters(appImei){
-        this.$axios.get('/app/appSetUpParameters?appImei='+appImei).then(response =>{
-            if (response.data.status == "1000") {
-              Lobibox.notify("success", {
-                size: "mini",
-                msg: response.data.errorMessage
-              });
-            } else if (response.data.status == "1001") {
-              layer.msg(response.data.errorMessage,{icon:3})
-            } else {
-              layer.msg(response.data.errorMessage,{icon:3})
-            }
-        })
+    setUpParameters(){
+         let _this=this;
+         let params = new URLSearchParams();
+         var powerAlarmLevel=_this.$refs.powerAlarmLevel.value;
+         var transmittingPower=_this.$refs.transmittingPower.value;
+         var broadcastInterval=_this.$refs.broadcastInterval.value;
+         var connectionInterval=_this.$refs.connectionInterval.value;
+         var connectionTimeout=_this.$refs.connectionTimeout.value;
+         var softwareDeviceVersion=_this.$refs.softwareDeviceVersion.value;
+         var heartbeat=_this.$refs.heartbeat.value;
+         var powerSampling=_this.$refs.powerSampling.value;
+         var matchTime=_this.$refs.matchTime.value;
+         var positioningInterval=_this.$refs.positioningInterval.value;
+         var safeCode=_this.$refs.safeCode.value;
+         //判断
+         if(!powerAlarmLevel || !transmittingPower || !broadcastInterval|| !connectionInterval|| !connectionTimeout
+         || !softwareDeviceVersion || !heartbeat|| !powerSampling|| !matchTime|| !positioningInterval|| !safeCode){
+           layer.msg("推送参数不能有空值");
+         }else{
+       
+          params.append("powerAlarmLevel", powerAlarmLevel),
+          params.append("transmittingPower", transmittingPower),
+          params.append("broadcastInterval", broadcastInterval),
+          params.append("connectionInterval",connectionInterval),
+          params.append("connectionTimeout",connectionTimeout),
+          params.append("softwareDeviceVersion",softwareDeviceVersion),
+          params.append("heartbeat", heartbeat),
+          params.append("powerSampling", powerSampling),
+          params.append("matchTime", matchTime),
+          params.append("positioningInterval", positioningInterval);
+          params.append("safeCode", safeCode);
+          }
+
+          layer.confirm( "确定要参数设置正确？",
+          {
+            btn: ["确定", "取消"] //按钮
+          },
+          function() {
+            _this.$axios.post('/app/appSetUpParameters?appImei='+_this.appImei,params).then(response =>{
+                if (response.data.status == "1000") {
+                  $("#exampleModalParameter").modal("hide");
+                  Lobibox.notify("success", {
+                    size: "mini",
+                    msg: response.data.errorMessage
+                  });
+                   // console.log(response.data);
+                layer.msg("推送成功", {
+                  time: 500 //0.5s后自动关闭
+                });
+                } else if (response.data.status == "1001") {
+                  layer.msg(response.data.errorMessage,{icon:3})
+                } else {
+                  layer.msg(response.data.errorMessage,{icon:3})
+                }
+            });
+            }, function() {
+            layer.msg("取消成功", {
+              time: 500 //0.5s后自动关闭
+            });
+           }
+         );
+
     },
     //分页
     btnClick: function(data) {

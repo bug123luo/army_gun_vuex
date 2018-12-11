@@ -20,9 +20,9 @@ Vue.use(VueRouter)
 //使用Axios
 Vue.prototype.$axios = axios
 
-//axios.defaults.baseURL = 'http://127.0.0.1:8888/gun';
+axios.defaults.baseURL = 'http://127.0.0.1:8888/gun';
 //axios.defaults.baseURL = 'http://132.232.32.227:8888/gun';
-axios.defaults.baseURL = 'http://120.76.156.120:8888/gun';
+//axios.defaults.baseURL = 'http://120.76.156.120:8888/gun';
 //axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF- 8';// 配置请求头
 axios.defaults.timeout = 10000;
 axios.defaults.withCredentials = true; // 让ajax携带cookie

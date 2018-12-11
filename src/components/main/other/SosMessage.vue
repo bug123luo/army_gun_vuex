@@ -36,7 +36,12 @@
                                         <td class="text-center">{{sosMessage.gunMac}}</td>
                                         <td class="text-center">{{sosMessage.guns.gunId}}</td>
                                         <td class="text-center">{{sosMessage.sosTime | formatDate}}</td>
-                                        <td class="text-center">{{sosMessage.state}}</td>
+                                        <td class="text-center" v-if="sosMessage.state=='已处理'" >
+                                          {{sosMessage.state}}
+                                        </td>
+                                        <td class="text-center" v-if="sosMessage.state=='未处理'"  style="color:red">
+                                          {{sosMessage.state}}
+                                        </td>
                                        
                                         <td class="text-center">
                                                 <!-- Button trigger modal -->
@@ -163,6 +168,9 @@ export default {
       this.$axios.get("/sosMessage/readSosMessageList?pn=" + pn).then(response => {
         console.log(response.data);
         this.sosMessageList = response.data.extend.pageInfo.list;
+         for (const key in  this.sosMessageList) {
+          this.sosMessageList[key].state=(this.sosMessageList[key].state)==0?"已处理":"未处理";
+        }
         var listPage = response.data.extend.pageInfo;
         this.all = listPage.pages; //总页数
         this.cur = listPage.pageNum; //当前页码

@@ -325,6 +325,9 @@ export default {
       this.$axios.get("/gun/readGunList?pn=" + pn).then(response => {
         //console.log(response.data);
         this.gunList = response.data.extend.pageInfo.list;
+        for (const key in  this.gunList) {
+          this.gunList[key].gunType=(this.gunList[key].gunType)==0?"长枪":"短枪";
+        }
         var listPage = response.data.extend.pageInfo;
         this.all = listPage.pages; //总页数
         this.cur = listPage.pageNum; //当前页码
@@ -343,6 +346,7 @@ export default {
       this.isShow = false;
       this.isShowTime = true;
       this.$axios.get("/gun/readGun?gunId=" + id).then(response => {
+   
         //console.log(response.data.extend.getGun);
         this.gun = response.data.extend.getGun;
         for (var js2 in this.gun) {
