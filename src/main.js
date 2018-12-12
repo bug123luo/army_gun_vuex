@@ -114,7 +114,7 @@ const router = new VueRouter({
     next(true);
   }else{
     next("/login");
-    alert("请先登录！");
+    layer.msg("请先登录！");
   }
 })  
 

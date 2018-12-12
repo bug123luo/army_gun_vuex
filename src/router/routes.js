@@ -19,6 +19,7 @@ import Mission from "@/components/main/other/Mission"
 import Device from "@/components/main/other/Device"
 import DataStatistics from "@/components/main/other/DataStatistics"
 import ProjectileBase from "@/components/main/other/ProjectileBase"
+import TrajectoryTracking from "@/components/main/other/TrajectoryTracking"
 
 
 
@@ -47,6 +48,7 @@ export const routes = [
       { path: "/findMap", name: "findMap", component: FindMap },
       { path: "/mission", name: "离位启停", component: Mission },
       { path: "/system/roleManage", name: "角色管理", component: RoleManage },
+      { path: "/trajectoryTracking", name: "trajectoryTracking", component: TrajectoryTracking },
         { path: "/*", redirect: '/home' },//找不到页面的时候，重定向到主页
         { path: "/*/**", redirect: '/home' },//找不到页面的时候，重定向到主页
    ]

@@ -50,7 +50,10 @@
             <td>{{onLineApp.gunId}}</td>
             <td>
               <span @click="findLocation(onLineApp.apps.appImei)" class="label label-success">查询</span>
-              <span @click="openFindTrajectory(onLineApp.apps.appImei)" class="label label-primary">轨迹</span>
+              <router-link :to="{name:'trajectoryTracking',params:{appImei:onLineApp.apps.appImei,name:onLineApp.apps.appName,imeiType:0}}"  class="label label-primary">
+                    轨迹
+              </router-link>
+              <!-- <span @click="openFindTrajectory(onLineApp.apps.appImei)" class="label label-primary">轨迹</span> -->
             </td>
           </tr>
         </tbody>
@@ -85,7 +88,10 @@
             <td>{{offNormalGun.guns.gunType}}</td>
             <td>
               <span @click="findLocation(offNormalGun.guns.gunImei)" class="label label-success">查询</span>
-              <span @click="openFindTrajectory(offNormalGun.guns.gunImei)" class="label label-primary">轨迹</span>
+               <router-link :to="{name:'trajectoryTracking',params:{appImei:offNormalGun.guns.gunImei,name:offNormalGun.gunId,imeiType:1}}"  class="label label-primary">
+                    轨迹
+              </router-link>
+             <!--  <span @click="openFindTrajectory(offNormalGun.guns.gunImei)" class="label label-primary">轨迹</span> -->
             </td>
           </tr>
         </tbody>
@@ -735,6 +741,9 @@ export default {
         });
 
     },
+    getTrajectory(){
+
+    },
     hoverApp:function (params) {
      this.stateApp=Boolean(params)
      this.stateGun=Boolean(!params)
@@ -877,7 +886,8 @@ export default {
   },
   created(){
       let _this=this
-      _this.setState=true
+      //为 true 打开定时 
+      _this.setState=false
       _this.getReadGunDynamicList(_this.pn)
       _this.getOnLineAppList(_this.pn_d)
       _this.getOnLineAppCount()
